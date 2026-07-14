@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { FormField } from './FormField';
 import { validateFieldName, validateForm } from '../validations/formValidation';
 import PosterCard from './PosterCard';
@@ -88,14 +88,86 @@ const RegistrationForm = () => {
     if (hasError) {
       setErrors(newErrors);
       showToast('Please fix validation errors on page 1.');
-      return;
+      return false;
     }
 
     setStep(2);
+    return true;
   };
 
   const handlePrevStep = () => {
     setStep(1);
+    return true;
+  };
+
+  const isScrolling = useRef(false);
+
+  const isTargetScrollable = (target, currentTarget) => {
+    let el = target;
+    while (el && el !== currentTarget) {
+      const style = window.getComputedStyle(el);
+      if ((style.overflowY === 'auto' || style.overflowY === 'scroll') && el.scrollHeight > el.clientHeight) {
+        return true;
+      }
+      el = el.parentElement;
+    }
+    return false;
+  };
+
+  const handleWheel = (e) => {
+    if (isTargetScrollable(e.target, e.currentTarget)) return;
+    if (isScrolling.current) return;
+
+    if (e.deltaY > 5) {
+      navigateNext();
+    } else if (e.deltaY < -5) {
+      navigatePrev();
+    }
+  };
+
+  const touchStartY = useRef(null);
+  const touchEndY = useRef(null);
+
+  const handleTouchStart = (e) => {
+    if (isTargetScrollable(e.target, e.currentTarget)) {
+      touchStartY.current = null;
+      return;
+    }
+    touchStartY.current = e.targetTouches[0].clientY;
+    touchEndY.current = e.targetTouches[0].clientY;
+  };
+
+  const handleTouchMove = (e) => {
+    if (touchStartY.current === null) return;
+    touchEndY.current = e.targetTouches[0].clientY;
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStartY.current === null) return;
+    if (isScrolling.current) return;
+    const swipeDistance = touchStartY.current - touchEndY.current;
+    
+    if (swipeDistance > 50) {
+      navigateNext();
+    } else if (swipeDistance < -50) {
+      navigatePrev();
+    }
+  };
+
+  const navigateNext = () => {
+    if (step < 2) {
+      isScrolling.current = true;
+      handleNextStep();
+      setTimeout(() => { isScrolling.current = false; }, 600);
+    }
+  };
+
+  const navigatePrev = () => {
+    if (step > 1) {
+      isScrolling.current = true;
+      handlePrevStep();
+      setTimeout(() => { isScrolling.current = false; }, 600);
+    }
   };
 
   const copyToClipboard = (text, label) => {
@@ -301,9 +373,15 @@ const RegistrationForm = () => {
 
 
           {/* ================= RIGHT COLUMN (Forms Card Wrapper) ================= */}
-          <div className="lg:col-span-6 flex flex-col justify-center items-center w-full transition-all duration-300">
+          <div 
+            onWheel={handleWheel}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            className="lg:col-span-6 flex flex-col justify-center items-center w-full transition-all duration-300"
+          >
             {/* Desktop form layout (Shown on lg sizes and above) */}
-                <div className="hidden lg:flex w-full max-w-[500px] mx-auto">
+            <div className="hidden lg:flex w-full max-w-[500px] mx-auto">
               <form 
                 onSubmit={handleSubmit}
                 className="w-full rounded-[24px] border border-indigo-500/20 shadow-[0_0_20px_rgba(99,102,241,0.08)] p-8 bg-[#040815]/65 backdrop-blur-md flex flex-col relative overflow-hidden"
@@ -319,85 +397,100 @@ const RegistrationForm = () => {
                   Register here
                 </h2>
 
-                <div className="flex flex-col gap-5.5">
-                  <FormField 
-                    name="name" 
-                    value={formData.name} 
-                    onChange={handleInputChange} 
-                    placeholder="Enter Name"
-                    error={errors.name}
-                  />
-                  <FormField 
-                    name="studentNumber" 
-                    value={formData.studentNumber} 
-                    onChange={handleInputChange} 
-                    placeholder="Enter Student Number"
-                    error={errors.studentNumber}
-                  />
-                  <FormField 
-                    type="email" 
-                    name="email" 
-                    value={formData.email} 
-                    onChange={handleInputChange} 
-                    placeholder="Enter College Email Id"
-                    error={errors.email}
-                  />
-                  <FormField 
-                    name="phoneNumber" 
-                    value={formData.phoneNumber} 
-                    onChange={handleInputChange} 
-                    placeholder="Enter Phone Number"
-                    error={errors.phoneNumber}
-                  />
-                  <FormField 
-                    name="unstopId" 
-                    value={formData.unstopId} 
-                    onChange={handleInputChange} 
-                    placeholder="Enter Unstop Id or (NaN)"
-                    error={errors.unstopId}
-                  />
-                  <FormField 
-                    type="select" 
-                    name="residence" 
-                    value={formData.residence} 
-                    onChange={handleInputChange} 
-                    placeholder="Select Residence"
-                    options={RESIDENCE_OPTIONS}
-                    error={errors.residence}
-                  />
-                  <FormField 
-                    type="select" 
-                    name="branch" 
-                    value={formData.branch} 
-                    onChange={handleInputChange} 
-                    placeholder="Branch"
-                    options={BRANCH_OPTIONS}
-                    error={errors.branch}
-                  />
-                  <FormField 
-                    type="select" 
-                    name="gender" 
-                    value={formData.gender} 
-                    onChange={handleInputChange} 
-                    placeholder="Select Gender"
-                    options={GENDER_OPTIONS}
-                    error={errors.gender}
-                  />
+                <div className="flex flex-col gap-5.5 relative pb-6 min-h-[385px]">
+                  {step === 1 && (
+                    <div className="flex flex-col gap-5.5 animate-slide-right w-full">
+                      <FormField 
+                        name="name" 
+                        value={formData.name} 
+                        onChange={handleInputChange} 
+                        placeholder="Enter Name"
+                        error={errors.name}
+                      />
+                      <FormField 
+                        name="studentNumber" 
+                        value={formData.studentNumber} 
+                        onChange={handleInputChange} 
+                        placeholder="Enter Student Number"
+                        error={errors.studentNumber}
+                      />
+                      <FormField 
+                        type="email" 
+                        name="email" 
+                        value={formData.email} 
+                        onChange={handleInputChange} 
+                        placeholder="Enter College Email Id"
+                        error={errors.email}
+                      />
+                      <FormField 
+                        type="select" 
+                        name="gender" 
+                        value={formData.gender} 
+                        onChange={handleInputChange} 
+                        placeholder="Select Gender"
+                        options={GENDER_OPTIONS}
+                        error={errors.gender}
+                      />
+                    </div>
+                  )}
 
-                  {/* Gradient blueprint submit button */}
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full mt-3 py-4 rounded-xl font-bold text-sm tracking-[0.25em] text-white bg-gradient-to-r from-[#00b0ff] to-[#bd22ff] border border-blue-400/25 hover:opacity-95 hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(59,130,246,0.35)] shadow-md transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer"
-                  >
-                    {isSubmitting ? 'SUBMITTING...' : 'SUBMIT'}
-                  </button>
+                  {step === 2 && (
+                    <div className="flex flex-col gap-5.5 animate-slide-left w-full">
+                      <FormField 
+                        type="select" 
+                        name="branch" 
+                        value={formData.branch} 
+                        onChange={handleInputChange} 
+                        placeholder="Branch"
+                        options={BRANCH_OPTIONS}
+                        error={errors.branch}
+                      />
+                      <FormField 
+                        name="phoneNumber" 
+                        value={formData.phoneNumber} 
+                        onChange={handleInputChange} 
+                        placeholder="Enter Phone Number"
+                        error={errors.phoneNumber}
+                      />
+                      <FormField 
+                        name="unstopId" 
+                        value={formData.unstopId} 
+                        onChange={handleInputChange} 
+                        placeholder="Enter Unstop Id or (NaN)"
+                        error={errors.unstopId}
+                      />
+                      <FormField 
+                        type="select" 
+                        name="residence" 
+                        value={formData.residence} 
+                        onChange={handleInputChange} 
+                        placeholder="Select Residence"
+                        options={RESIDENCE_OPTIONS}
+                        error={errors.residence}
+                      />
+
+                      {/* Gradient blueprint submit button */}
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full mt-3 py-4 rounded-xl font-bold text-sm tracking-[0.25em] text-white bg-gradient-to-r from-[#00b0ff] to-[#bd22ff] border border-blue-400/25 hover:opacity-95 hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(59,130,246,0.35)] shadow-md transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer"
+                      >
+                        {isSubmitting ? 'SUBMITTING...' : 'SUBMIT'}
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Pagination Dots for Desktop */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-3 z-30">
+                  <div className={`w-12 h-1.5 rounded-full transition-colors duration-500 ${step === 1 ? 'bg-[#00d2ff] shadow-[0_0_10px_rgba(0,210,255,0.8)]' : 'bg-white/20'}`} />
+                  <div className={`w-12 h-1.5 rounded-full transition-colors duration-500 ${step === 2 ? 'bg-[#00d2ff] shadow-[0_0_10px_rgba(0,210,255,0.8)]' : 'bg-white/20'}`} />
                 </div>
               </form>
             </div>
             
             {/* Mobile form layout (Shown on screens < lg) */}
-            <div className="w-full lg:hidden flex flex-col gap-6 relative">
+            <div className="w-full lg:hidden flex flex-col gap-6 relative pb-8">
               <h2 className="text-[18px] md:text-[22px] font-bold tracking-wider text-center mb-1 text-white/90">
                 Register here
               </h2>
@@ -553,6 +646,12 @@ const RegistrationForm = () => {
                   </button>
                 </div>
               )}
+
+              {/* Pagination Dots for Mobile */}
+              <div className="absolute bottom-[-10px] left-1/2 -translate-x-1/2 flex gap-3 z-30">
+                <div className={`w-12 h-1.5 rounded-full transition-colors duration-500 ${step === 1 ? 'bg-[#00d2ff] shadow-[0_0_10px_rgba(0,210,255,0.8)]' : 'bg-white/20'}`} />
+                <div className={`w-12 h-1.5 rounded-full transition-colors duration-500 ${step === 2 ? 'bg-[#00d2ff] shadow-[0_0_10px_rgba(0,210,255,0.8)]' : 'bg-white/20'}`} />
+              </div>
             </div>
 
           </div>
