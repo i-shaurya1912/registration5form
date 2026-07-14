@@ -261,7 +261,7 @@ const RegistrationForm = () => {
                 {/* Social media icons links container */}
                 <div className="flex gap-6 max-w-[360px] lg:max-w-none lg:ml-1 mb-8 lg:mb-0">
                   <a 
-                    href="https://facebook.com" 
+                    href="https://www.facebook.com/ccc.akgec" 
                     target="_blank" 
                     rel="noreferrer" 
                     className="w-7.5 h-7.5 flex items-center justify-center bg-[#0d59b2] hover:bg-[#1070e0] border border-blue-400/10 rounded-md shadow-sm transition-all duration-300 hover:scale-110 active:scale-95"
@@ -272,7 +272,7 @@ const RegistrationForm = () => {
                     </svg>
                   </a>
                   <a 
-                    href="https://linkedin.com" 
+                    href="https://www.linkedin.com/company/cloud-computing-cell-akgec/" 
                     target="_blank" 
                     rel="noreferrer" 
                     className="w-7.5 h-7.5 flex items-center justify-center bg-[#006097] hover:bg-[#0074b6] border border-blue-400/10 rounded-md shadow-sm transition-all duration-300 hover:scale-110 active:scale-95"
@@ -283,7 +283,7 @@ const RegistrationForm = () => {
                   </svg>
                 </a>
                 <a 
-                  href="https://instagram.com" 
+                  href="https://www.instagram.com/ccc_akgec/" 
                   target="_blank" 
                   rel="noreferrer" 
                   className="w-7.5 h-7.5 flex items-center justify-center bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] hover:brightness-110 border border-pink-400/10 rounded-md shadow-sm transition-all duration-300 hover:scale-110 active:scale-95"
