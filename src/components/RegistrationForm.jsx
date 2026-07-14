@@ -140,7 +140,7 @@ const RegistrationForm = () => {
   };
 
   return (
-    <div className="w-full max-w-[420px] lg:max-w-[1060px] mx-auto px-4 md:px-6 py-6 lg:py-12 flex flex-col items-center justify-between min-h-screen text-white relative z-10">
+    <div className="w-full max-w-[420px] lg:max-w-[1240px] mx-auto px-4 md:px-6 py-6 lg:py-12 flex flex-col items-center justify-between min-h-screen text-white relative z-10">
       
       {/* Toast Alert Banner */}
       {toast.show && (
@@ -197,9 +197,9 @@ const RegistrationForm = () => {
         <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center justify-center my-auto transition-all duration-300">
           
           {/* ================= LEFT COLUMN (Branding or Poster) ================= */}
-          <div className={`${showPoster ? 'lg:col-span-7' : 'lg:col-span-5'} flex flex-col items-center text-center lg:items-start lg:text-left h-full justify-center w-full transition-all duration-300`}>
+          <div className="lg:col-span-6 flex flex-col items-center text-center lg:items-start lg:text-left h-full justify-center w-full transition-all duration-300">
             {showPoster ? (
-              <div className="w-full">
+              <div className="w-full max-w-[480px] mx-auto">
                 <PosterCard onClose={handleClosePoster} isClosing={isClosing} />
               </div>
             ) : (
@@ -301,9 +301,9 @@ const RegistrationForm = () => {
 
 
           {/* ================= RIGHT COLUMN (Forms Card Wrapper) ================= */}
-          <div className={`${showPoster ? 'lg:col-span-5' : 'lg:col-span-7'} flex flex-col justify-center items-center w-full transition-all duration-300`}>
+          <div className="lg:col-span-6 flex flex-col justify-center items-center w-full transition-all duration-300">
             {/* Desktop form layout (Shown on lg sizes and above) */}
-                <div className="hidden lg:flex w-full">
+                <div className="hidden lg:flex w-full max-w-[500px] mx-auto">
               <form 
                 onSubmit={handleSubmit}
                 className="w-full rounded-[24px] border border-indigo-500/20 shadow-[0_0_20px_rgba(99,102,241,0.08)] p-8 bg-[#040815]/65 backdrop-blur-md flex flex-col relative overflow-hidden"
