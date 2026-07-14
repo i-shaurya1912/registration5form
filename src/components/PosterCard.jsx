@@ -1,21 +1,25 @@
 import React from 'react';
-import posterImg from './elements/Reg. pg SPOCC\'26 (1b).png';
+import posterImg from './elements/Main_Poster_Optimized.jpg';
 
-const PosterCard = ({ onClose }) => {
+const PosterCard = ({ onClose, isClosing }) => {
   return (
     <div 
-      className="relative w-full overflow-hidden rounded-[24px] border border-blue-500/30 shadow-[0_0_25px_rgba(59,130,246,0.15)] bg-[#040815]/90 backdrop-blur-md cursor-pointer animate-fade-in group"
+      className={`relative w-full overflow-hidden rounded-[24px] border border-blue-500/30 shadow-[0_0_25px_rgba(59,130,246,0.15)] bg-[#040815]/90 backdrop-blur-md cursor-pointer group transition-all duration-400 ${
+        isClosing 
+          ? 'opacity-0 scale-95 translate-y-4 pointer-events-none' 
+          : 'animate-scale-up'
+      }`}
       onClick={onClose}
       style={{
-        aspectRatio: '320/460',
+        aspectRatio: '1000/1414',
       }}
     >
-      {/* Cropped Poster Image */}
+      {/* Full Poster Image */}
       <div className="absolute inset-0 w-full h-full overflow-hidden">
         <img 
           src={posterImg} 
           alt="SPOCC'26 Poster"
-          className="absolute left-0 w-full h-[126%] -top-[12.8%] object-cover transition-transform duration-700 group-hover:scale-103"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-103"
         />
       </div>
 

@@ -31,6 +31,15 @@ const RESIDENCE_OPTIONS = [
 const RegistrationForm = () => {
   const [step, setStep] = useState(1);
   const [showPoster, setShowPoster] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+
+  const handleClosePoster = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setShowPoster(false);
+      setIsClosing(false);
+    }, 400);
+  };
   const [formData, setFormData] = useState({
     name: '',
     studentNumber: '',
@@ -185,13 +194,13 @@ const RegistrationForm = () => {
         </div>
       ) : (
         /* Layout Grid */
-        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center justify-center my-auto">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center justify-center my-auto transition-all duration-300">
           
           {/* ================= LEFT COLUMN (Branding or Poster) ================= */}
-          <div className="lg:col-span-5 flex flex-col items-center text-center lg:items-start lg:text-left h-full justify-center">
+          <div className={`${showPoster ? 'lg:col-span-7' : 'lg:col-span-5'} flex flex-col items-center text-center lg:items-start lg:text-left h-full justify-center w-full transition-all duration-300`}>
             {showPoster ? (
-              <div className="w-full animate-fade-in">
-                <PosterCard onClose={() => setShowPoster(false)} />
+              <div className="w-full">
+                <PosterCard onClose={handleClosePoster} isClosing={isClosing} />
               </div>
             ) : (
               <div className="w-full flex flex-col items-center lg:items-start animate-fade-in">
@@ -271,29 +280,30 @@ const RegistrationForm = () => {
                   >
                     <svg className="w-4 h-4 text-white fill-current" viewBox="0 0 24 24">
                       <path d="M22.23 0H1.77C.8 0 0 .77 0 1.72v20.56C0 23.23.8 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.72V1.72C24 .77 23.2 0 22.23 0zM7.12 20.45H3.56V9h3.56v11.45zM5.34 7.43c-1.14 0-2.06-.92-2.06-2.06 0-1.14.92-2.06 2.06-2.06 1.14 0 2.06.92 2.06 2.06 0 1.14-.92 2.06-2.06 2.06zm15.11 13.02h-3.56v-5.6c0-1.34-.03-3.05-1.86-3.05-1.86 0-2.14 1.45-2.14 2.95v5.7h-3.56V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29z" />
-                    </svg>
-                  </a>
-                  <a 
-                    href="https://instagram.com" 
-                    target="_blank" 
-                    rel="noreferrer" 
-                    className="w-7.5 h-7.5 flex items-center justify-center bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] hover:brightness-110 border border-pink-400/10 rounded-md shadow-sm transition-all duration-300 hover:scale-110 active:scale-95"
-                    aria-label="Instagram Link"
-                  >
-                    <svg className="w-4 h-4 text-white fill-current" viewBox="0 0 24 24">
-                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
-                    </svg>
-                  </a>
-                </div>
+                  </svg>
+                </a>
+                <a 
+                  href="https://instagram.com" 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="w-7.5 h-7.5 flex items-center justify-center bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] hover:brightness-110 border border-pink-400/10 rounded-md shadow-sm transition-all duration-300 hover:scale-110 active:scale-95"
+                  aria-label="Instagram Link"
+                >
+                  <svg className="w-4 h-4 text-white fill-current" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                  </svg>
+                </a>
               </div>
-            )}
-          </div>
+            </div>
+          )}
+        </div>
+
+
 
           {/* ================= RIGHT COLUMN (Forms Card Wrapper) ================= */}
-          <div className="lg:col-span-7 flex flex-col justify-center items-center w-full">
-            
+          <div className={`${showPoster ? 'lg:col-span-5' : 'lg:col-span-7'} flex flex-col justify-center items-center w-full transition-all duration-300`}>
             {/* Desktop form layout (Shown on lg sizes and above) */}
-            <div className="hidden lg:flex w-full">
+                <div className="hidden lg:flex w-full">
               <form 
                 onSubmit={handleSubmit}
                 className="w-full rounded-[24px] border border-indigo-500/20 shadow-[0_0_20px_rgba(99,102,241,0.08)] p-8 bg-[#040815]/65 backdrop-blur-md flex flex-col relative overflow-hidden"
