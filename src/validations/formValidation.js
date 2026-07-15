@@ -14,7 +14,7 @@ export const validateFieldName = (name, value) => {
       }
       return '';
 
-    case 'email':
+    case 'email': {
       if (!value.trim()) return 'College Email ID is required';
       // Simple check for valid email format
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -27,6 +27,7 @@ export const validateFieldName = (name, value) => {
         // to prevent lockouts, but we can do a softer warning or enforce. Let's make it advisory.
       }
       return '';
+    }
 
     case 'gender':
       if (!value) return 'Gender is required';
