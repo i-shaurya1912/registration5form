@@ -72,27 +72,23 @@ const RegistrationForm = () => {
     setErrors((prev) => ({ ...prev, [name]: err }));
   };
 
-  const handleNextStep = (event, shouldValidate = false) => {
-    if (event?.preventDefault) event.preventDefault();
+  const handleNextStep = () => {
+    const page1Fields = ['name', 'studentNumber', 'email', 'gender'];
+    const newErrors = {};
+    let hasError = false;
 
-    if (shouldValidate) {
-      const page1Fields = ['name', 'studentNumber', 'email', 'gender'];
-      const newErrors = {};
-      let hasError = false;
-
-      page1Fields.forEach((field) => {
-        const err = validateFieldName(field, formData[field]);
-        if (err) {
-          newErrors[field] = err;
-          hasError = true;
-        }
-      });
-
-      if (hasError) {
-        setErrors(newErrors);
-        showToast('Please fix validation errors on page 1.');
-        return false;
+    page1Fields.forEach((field) => {
+      const err = validateFieldName(field, formData[field]);
+      if (err) {
+        newErrors[field] = err;
+        hasError = true;
       }
+    });
+
+    if (hasError) {
+      setErrors(newErrors);
+      showToast('Please fix validation errors on page 1.');
+      return false;
     }
 
     setStep(2);
@@ -104,13 +100,21 @@ const RegistrationForm = () => {
     return true;
   };
 
-  const isScrolling = useRef(false);
+  const transitionStep = (direction) => {
+    if (direction === 'next' && step < 2) {
+      setStep(2);
+      return true;
+    }
 
-  const isInteractiveTarget = (target) => {
-    if (!target) return false;
-    const interactiveTags = ['input', 'select', 'textarea', 'button', 'a'];
-    return interactiveTags.includes(target.tagName?.toLowerCase()) || target.closest?.('input, select, textarea, button, a');
+    if (direction === 'prev' && step > 1) {
+      setStep(1);
+      return true;
+    }
+
+    return false;
   };
+
+  const isScrolling = useRef(false);
 
   const isTargetScrollable = (target, currentTarget) => {
     let el = target;
@@ -125,25 +129,12 @@ const RegistrationForm = () => {
   };
 
   const handleWheel = (e) => {
-    const target = e.target;
-
-    if (isTargetScrollable(target, e.currentTarget) || isInteractiveTarget(target)) {
-      return;
-    }
-
-    if (isScrolling.current) {
-      e.preventDefault();
-      e.stopPropagation();
-      return;
-    }
+    if (isTargetScrollable(e.target, e.currentTarget)) return;
+    if (isScrolling.current) return;
 
     if (e.deltaY > 5) {
-      e.preventDefault();
-      e.stopPropagation();
       navigateNext();
     } else if (e.deltaY < -5) {
-      e.preventDefault();
-      e.stopPropagation();
       navigatePrev();
     }
   };
@@ -152,9 +143,8 @@ const RegistrationForm = () => {
   const touchEndY = useRef(null);
 
   const handleTouchStart = (e) => {
-    if (isTargetScrollable(e.target, e.currentTarget) || isInteractiveTarget(e.target)) {
+    if (isTargetScrollable(e.target, e.currentTarget)) {
       touchStartY.current = null;
-      touchEndY.current = null;
       return;
     }
     touchStartY.current = e.targetTouches[0].clientY;
@@ -166,27 +156,22 @@ const RegistrationForm = () => {
     touchEndY.current = e.targetTouches[0].clientY;
   };
 
-  const handleTouchEnd = (e) => {
+  const handleTouchEnd = () => {
     if (touchStartY.current === null) return;
     if (isScrolling.current) return;
     const swipeDistance = touchStartY.current - touchEndY.current;
-
-    if (swipeDistance > 60) {
-      e?.preventDefault?.();
+    
+    if (swipeDistance > 50) {
       navigateNext();
-    } else if (swipeDistance < -60) {
-      e?.preventDefault?.();
+    } else if (swipeDistance < -50) {
       navigatePrev();
     }
-
-    touchStartY.current = null;
-    touchEndY.current = null;
   };
 
   const navigateNext = () => {
     if (step < 2) {
       isScrolling.current = true;
-      setStep(2);
+      transitionStep('next');
       setTimeout(() => { isScrolling.current = false; }, 600);
     }
   };
@@ -194,7 +179,7 @@ const RegistrationForm = () => {
   const navigatePrev = () => {
     if (step > 1) {
       isScrolling.current = true;
-      handlePrevStep();
+      transitionStep('prev');
       setTimeout(() => { isScrolling.current = false; }, 600);
     }
   };
@@ -241,9 +226,7 @@ const RegistrationForm = () => {
   };
 
   return (
-    <div
-      className="w-full max-w-[420px] lg:max-w-[1240px] mx-auto px-4 md:px-6 py-4 pb-10 lg:py-8 flex flex-col items-start justify-start lg:justify-between min-h-[100dvh] lg:h-full text-white relative z-10 overflow-x-hidden overflow-y-visible touch-pan-y"
-    >
+    <div className="w-full max-w-[420px] lg:max-w-[1240px] mx-auto px-4 md:px-6 py-4 lg:py-8 flex flex-col items-center justify-between h-full text-white relative z-10 overflow-hidden">
       
       {/* Toast Alert Banner */}
       {toast.show && (
@@ -404,12 +387,12 @@ const RegistrationForm = () => {
 
 
           {/* ================= RIGHT COLUMN (Forms Card Wrapper) ================= */}
-          <div
-            className="lg:col-span-6 flex flex-col justify-center items-center w-full transition-all duration-300"
+          <div 
             onWheel={handleWheel}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
+            className="lg:col-span-6 flex flex-col justify-center items-center w-full transition-all duration-300"
           >
             {/* Desktop form layout (Shown on lg sizes and above) */}
             <div className="hidden lg:flex w-full max-w-[500px] mx-auto">
@@ -521,7 +504,7 @@ const RegistrationForm = () => {
             </div>
             
             {/* Mobile form layout (Shown on screens < lg) */}
-            <div className="w-full lg:hidden flex flex-col gap-6 relative pb-16">
+            <div className="w-full lg:hidden flex flex-col gap-6 relative pb-8">
               <h2 className="text-[18px] md:text-[22px] font-bold tracking-wider text-center mb-1 text-white/90">
                 Register here
               </h2>
@@ -586,10 +569,7 @@ const RegistrationForm = () => {
                   {/* Mobile Right Chevron Navigation Button */}
                   <button
                     type="button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      handleNextStep(event);
-                    }}
+                    onClick={handleNextStep}
                     className="absolute -right-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-indigo-600/40 border border-indigo-500/30 rounded-full hover:bg-indigo-600/80 transition-all duration-300 hover:scale-105 select-none active:scale-95 shadow-md z-20 cursor-pointer"
                     aria-label="Next Step"
                   >
@@ -661,10 +641,7 @@ const RegistrationForm = () => {
                   {/* Mobile Left Chevron Navigation Button */}
                   <button
                     type="button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      handlePrevStep(event);
-                    }}
+                    onClick={handlePrevStep}
                     className="absolute -left-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-indigo-600/40 border border-indigo-500/30 rounded-full hover:bg-indigo-600/80 transition-all duration-300 hover:scale-105 select-none active:scale-95 shadow-md z-20 cursor-pointer"
                     aria-label="Previous Step"
                   >
@@ -697,7 +674,7 @@ const RegistrationForm = () => {
       )}
       
       {/* Mobile-Only Mobile Footer Subtext (Header items occupy footer on mobile sizing) */}
-      <footer className="w-full flex lg:hidden flex-col items-center mt-6 pb-6 text-center">
+      <footer className="w-full flex lg:hidden flex-col items-center mt-3 text-center">
         <span className="text-[12px] font-bold tracking-[0.3em] uppercase text-white/95 mb-1.5 select-none">
           THINK.DEVELOP.DEPLOY
         </span>

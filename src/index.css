@@ -1,22 +1,5 @@
 @import "tailwindcss";
 
-html, body, #root {
-  min-height: 100%;
-  margin: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-body {
-  min-height: 100vh;
-  background: #020617;
-}
-
-#root {
-  min-height: 100vh;
-}
-
 @theme {
   --animate-spin-slow: spin-slow 12s linear infinite;
   --animate-fade-in: fade-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
