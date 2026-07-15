@@ -232,7 +232,7 @@ const RegistrationForm = () => {
   };
 
   return (
-    <div className="w-full max-w-[420px] lg:max-w-[1240px] mx-auto px-4 md:px-6 py-4 lg:py-8 flex flex-col items-center justify-between h-full text-white relative z-10 overflow-hidden">
+    <div className="w-full max-w-[420px] lg:max-w-[1240px] mx-auto px-4 md:px-6 py-4 lg:py-8 flex flex-col items-center justify-between min-h-screen md:min-h-0 md:h-full text-white relative z-10 overflow-visible">
       
       {/* Toast Alert Banner */}
       {toast.show && (
