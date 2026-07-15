@@ -72,7 +72,9 @@ const RegistrationForm = () => {
     setErrors((prev) => ({ ...prev, [name]: err }));
   };
 
-  const handleNextStep = () => {
+  const handleNextStep = (event) => {
+    if (event?.preventDefault) event.preventDefault();
+
     const page1Fields = ['name', 'studentNumber', 'email', 'gender'];
     const newErrors = {};
     let hasError = false;
@@ -116,11 +118,19 @@ const RegistrationForm = () => {
 
   const handleWheel = (e) => {
     if (isTargetScrollable(e.target, e.currentTarget)) return;
-    if (isScrolling.current) return;
+    if (isScrolling.current) {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
 
     if (e.deltaY > 5) {
+      e.preventDefault();
+      e.stopPropagation();
       navigateNext();
     } else if (e.deltaY < -5) {
+      e.preventDefault();
+      e.stopPropagation();
       navigatePrev();
     }
   };
@@ -140,16 +150,19 @@ const RegistrationForm = () => {
   const handleTouchMove = (e) => {
     if (touchStartY.current === null) return;
     touchEndY.current = e.targetTouches[0].clientY;
+    e.preventDefault();
   };
 
-  const handleTouchEnd = () => {
+  const handleTouchEnd = (e) => {
     if (touchStartY.current === null) return;
     if (isScrolling.current) return;
     const swipeDistance = touchStartY.current - touchEndY.current;
-    
+
     if (swipeDistance > 50) {
+      e?.preventDefault?.();
       navigateNext();
     } else if (swipeDistance < -50) {
+      e?.preventDefault?.();
       navigatePrev();
     }
   };
@@ -157,7 +170,7 @@ const RegistrationForm = () => {
   const navigateNext = () => {
     if (step < 2) {
       isScrolling.current = true;
-      handleNextStep();
+      setStep(2);
       setTimeout(() => { isScrolling.current = false; }, 600);
     }
   };
@@ -212,7 +225,13 @@ const RegistrationForm = () => {
   };
 
   return (
-    <div className="w-full max-w-[420px] lg:max-w-[1240px] mx-auto px-4 md:px-6 py-4 lg:py-8 flex flex-col items-center justify-between h-full text-white relative z-10 overflow-hidden">
+    <div
+      className="w-full max-w-[420px] lg:max-w-[1240px] mx-auto px-4 md:px-6 py-4 lg:py-8 flex flex-col items-center justify-between h-full text-white relative z-10 overflow-hidden touch-none"
+      onWheel={handleWheel}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       
       {/* Toast Alert Banner */}
       {toast.show && (
@@ -373,13 +392,7 @@ const RegistrationForm = () => {
 
 
           {/* ================= RIGHT COLUMN (Forms Card Wrapper) ================= */}
-          <div 
-            onWheel={handleWheel}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            className="lg:col-span-6 flex flex-col justify-center items-center w-full transition-all duration-300"
-          >
+          <div className="lg:col-span-6 flex flex-col justify-center items-center w-full transition-all duration-300">
             {/* Desktop form layout (Shown on lg sizes and above) */}
             <div className="hidden lg:flex w-full max-w-[500px] mx-auto">
               <form 

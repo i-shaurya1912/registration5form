@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  background: #020617;
+}
+
 @theme {
   --animate-spin-slow: spin-slow 12s linear infinite;
   --animate-fade-in: fade-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
