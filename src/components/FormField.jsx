@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const FormField = ({
   type = 'text',
@@ -10,48 +11,103 @@ const FormField = ({
   options = [],
 }) => {
   const isSelect = type === 'select';
+  const [isOpen, setIsOpen] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    if (!isSelect) return;
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isSelect]);
+
+  const handleSelect = (optValue) => {
+    onChange({ target: { name, value: optValue } });
+    setIsOpen(false);
+  };
 
   const baseInputStyles = `
-    w-full px-4 py-3.5 bg-[#030712]/40 rounded-xl text-white font-medium placeholder-[#5b6e9c]
-    border transition-all duration-300 outline-none text-[13px] md:text-[14px]
+    w-full px-5 py-4 lg:py-5 bg-transparent rounded-xl text-white font-bold placeholder-[#5b6e9c]
+    border-2 transition-all duration-300 outline-none text-[14px] md:text-[15px] lg:text-[16px] tracking-wide
     ${error 
-      ? 'border-[#ff0055] focus:border-[#ff3366] shadow-[0_0_10px_rgba(255,0,85,0.15)] animate-shake' 
-      : 'border-indigo-500/25 focus:border-indigo-500 focus:shadow-[0_0_15px_rgba(99,102,241,0.25)]'
+      ? 'border-[#ff0055] shadow-[0_0_30px_rgba(255,0,85,0.6),inset_0_0_20px_rgba(255,0,85,0.2)] animate-shake' 
+      : (isOpen || isFocused 
+          ? 'border-[#00d2ff] shadow-[0_0_40px_rgba(0,210,255,0.6),inset_0_0_25px_rgba(0,210,255,0.25)]' 
+          : 'animate-border-flicker hover:border-[#00d2ff]/80 hover:shadow-[0_0_30px_rgba(0,210,255,0.4),inset_0_0_20px_rgba(0,210,255,0.15)]')
     }
   `;
 
   return (
-    <div className="w-full relative group">
+    <div className={`w-full relative group transition-all duration-300 ${isOpen ? 'z-[100]' : 'z-30'}`}>
+      <style>{`
+        @keyframes border-flicker {
+          0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+            border-color: rgba(0, 210, 255, 0.6);
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.35), inset 0 0 15px rgba(0, 210, 255, 0.1);
+          }
+          20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+            border-color: rgba(0, 210, 255, 0.1);
+            box-shadow: none;
+          }
+        }
+        .animate-border-flicker {
+          animation: border-flicker 8s infinite;
+        }
+      `}</style>
+
       {isSelect ? (
-        <div className="relative">
-          <select
-            name={name}
-            value={value}
-            onChange={onChange}
-            className={`${baseInputStyles} appearance-none cursor-pointer ${
+        <div className="relative" ref={dropdownRef}>
+          <div 
+            onClick={() => setIsOpen(!isOpen)} 
+            className={`${baseInputStyles} flex items-center justify-between cursor-pointer select-none ${
               !value ? 'text-[#5b6e9c]' : 'text-white'
             }`}
           >
-            <option value="" disabled>
-              {placeholder}
-            </option>
-            {options.map((opt) => (
-              <option key={opt.value} value={opt.value} className="bg-[#0b0f19] text-white">
-                {opt.label}
-              </option>
-            ))}
-          </select>
-          {/* Custom Chevron Indicator */}
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-indigo-400 group-focus-within:text-indigo-300">
-            <svg
-              className="w-4 h-4 transition-transform duration-300"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+            <span className="truncate">
+              {value ? options.find(o => o.value === value)?.label : placeholder}
+            </span>
+            <motion.div 
+              animate={{ rotate: isOpen ? 180 : 0 }} 
+              transition={{ duration: 0.2 }} 
+              className={`flex-shrink-0 ml-2 transition-colors duration-300 ${isOpen ? 'text-[#00d2ff]' : 'text-indigo-400 group-hover:text-indigo-300'}`}
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
-            </svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </motion.div>
           </div>
+
+          <AnimatePresence>
+            {isOpen && (
+              <motion.div 
+                initial={{ opacity: 0, y: -5, scale: 0.98 }} 
+                animate={{ opacity: 1, y: 0, scale: 1 }} 
+                exit={{ opacity: 0, y: -5, scale: 0.98 }} 
+                transition={{ duration: 0.15 }} 
+                className="absolute top-full left-0 right-0 mt-2 p-1.5 bg-[#050b18]/95 backdrop-blur-xl border border-[#00d2ff]/30 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] z-[100] max-h-[220px] overflow-y-auto"
+                style={{ scrollbarWidth: 'thin', scrollbarColor: '#00d2ff transparent' }}
+              >
+                {options.map((opt) => (
+                  <div 
+                    key={opt.value} 
+                    onClick={() => handleSelect(opt.value)} 
+                    className={`
+                      px-4 py-3 rounded-lg cursor-pointer text-[13px] md:text-[14px] font-medium transition-all duration-200
+                      hover:bg-[#00d2ff]/10 hover:text-[#00d2ff] 
+                      ${value === opt.value ? 'text-[#00d2ff] bg-[#00d2ff]/15 font-semibold' : 'text-white/80'}
+                    `}
+                  >
+                    {opt.label}
+                  </div>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       ) : (
         <input
@@ -59,6 +115,8 @@ const FormField = ({
           name={name}
           value={value}
           onChange={onChange}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
           className={baseInputStyles}
         />
@@ -66,7 +124,7 @@ const FormField = ({
 
       {/* Field Level Error Message */}
       {error && (
-        <div className="absolute -bottom-4.5 left-2 text-[10px] text-[#ff0055] font-semibold animate-fade-in">
+        <div className="absolute -bottom-4.5 left-2 text-[10px] text-[#ff0055] font-semibold animate-fade-in pointer-events-none">
           {error}
         </div>
       )}
