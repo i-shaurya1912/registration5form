@@ -125,7 +125,12 @@ const RegistrationForm = () => {
   };
 
   const handleWheel = (e) => {
-    if (isTargetScrollable(e.target, e.currentTarget) || isInteractiveTarget(e.target)) return;
+    const target = e.target;
+
+    if (isTargetScrollable(target, e.currentTarget) || isInteractiveTarget(target)) {
+      return;
+    }
+
     if (isScrolling.current) {
       e.preventDefault();
       e.stopPropagation();
@@ -238,10 +243,6 @@ const RegistrationForm = () => {
   return (
     <div
       className="w-full max-w-[420px] lg:max-w-[1240px] mx-auto px-4 md:px-6 py-4 pb-10 lg:py-8 flex flex-col items-start justify-start lg:justify-between min-h-[100dvh] lg:h-full text-white relative z-10 overflow-x-hidden overflow-y-visible touch-pan-y"
-      onWheel={handleWheel}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
     >
       
       {/* Toast Alert Banner */}
@@ -403,7 +404,13 @@ const RegistrationForm = () => {
 
 
           {/* ================= RIGHT COLUMN (Forms Card Wrapper) ================= */}
-          <div className="lg:col-span-6 flex flex-col justify-center items-center w-full transition-all duration-300">
+          <div
+            className="lg:col-span-6 flex flex-col justify-center items-center w-full transition-all duration-300"
+            onWheel={handleWheel}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
             {/* Desktop form layout (Shown on lg sizes and above) */}
             <div className="hidden lg:flex w-full max-w-[500px] mx-auto">
               <form 
