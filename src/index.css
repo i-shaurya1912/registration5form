@@ -40,6 +40,14 @@
   75% { transform: translateX(4px); }
 }
 
+@media (max-width: 1023px) {
+  html, body {
+    overflow: hidden;
+    height: 100%;
+    overscroll-behavior: none;
+  }
+}
+
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;

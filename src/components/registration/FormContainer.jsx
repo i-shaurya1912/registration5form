@@ -34,10 +34,19 @@ export const FormContainer = ({
     return false;
   };
 
+  const isInteractiveTarget = (target) => {
+    if (!target || typeof target.closest !== 'function') return false;
+    const interactiveSelectors = ['input', 'textarea', 'select', 'button', 'a'];
+    return interactiveSelectors.some((selector) => target.closest(selector)) || target.isContentEditable;
+  };
+
   const handleWheel = (e) => {
     if (step === 3) return; // Disable scrolling on OTP step
     if (isTargetScrollable(e.target, e.currentTarget)) return;
-    if (isScrolling.current) return;
+    if (isInteractiveTarget(e.target)) return;
+    if (isScrolling.current || Math.abs(e.deltaY) < 5) return;
+
+    e.preventDefault();
 
     if (e.deltaY > 5) {
       isScrolling.current = true;
@@ -52,8 +61,9 @@ export const FormContainer = ({
 
   const handleTouchStart = (e) => {
     if (step === 3) return; // Disable swiping on OTP step
-    if (isTargetScrollable(e.target, e.currentTarget)) {
+    if (isTargetScrollable(e.target, e.currentTarget) || isInteractiveTarget(e.target)) {
       touchStartY.current = null;
+      touchEndY.current = null;
       return;
     }
     touchStartY.current = e.targetTouches[0].clientY;
@@ -62,7 +72,13 @@ export const FormContainer = ({
 
   const handleTouchMove = (e) => {
     if (step === 3 || touchStartY.current === null) return;
+    if (isInteractiveTarget(e.target)) return;
+
     touchEndY.current = e.targetTouches[0].clientY;
+    const swipeDistance = touchStartY.current - touchEndY.current;
+    if (Math.abs(swipeDistance) > 8 && e.cancelable) {
+      e.preventDefault();
+    }
   };
 
   const handleTouchEnd = () => {
@@ -79,6 +95,9 @@ export const FormContainer = ({
       navigatePrev();
       setTimeout(() => { isScrolling.current = false; }, 600);
     }
+
+    touchStartY.current = null;
+    touchEndY.current = null;
   };
 
   return (
