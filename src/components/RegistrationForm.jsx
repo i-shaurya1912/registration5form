@@ -116,6 +116,8 @@ const RegistrationForm = () => {
 
   const isScrolling = useRef(false);
 
+  const isMobileViewport = () => typeof window !== 'undefined' && window.innerWidth < 1024;
+
   const isTargetScrollable = (target, currentTarget) => {
     let el = target;
     while (el && el !== currentTarget) {
@@ -129,6 +131,7 @@ const RegistrationForm = () => {
   };
 
   const handleWheel = (e) => {
+    if (!isMobileViewport()) return;
     if (isTargetScrollable(e.target, e.currentTarget)) return;
     if (isScrolling.current) return;
 
@@ -143,6 +146,7 @@ const RegistrationForm = () => {
   const touchEndY = useRef(null);
 
   const handleTouchStart = (e) => {
+    if (!isMobileViewport()) return;
     if (isTargetScrollable(e.target, e.currentTarget)) {
       touchStartY.current = null;
       return;
@@ -152,11 +156,13 @@ const RegistrationForm = () => {
   };
 
   const handleTouchMove = (e) => {
+    if (!isMobileViewport()) return;
     if (touchStartY.current === null) return;
     touchEndY.current = e.targetTouches[0].clientY;
   };
 
   const handleTouchEnd = () => {
+    if (!isMobileViewport()) return;
     if (touchStartY.current === null) return;
     if (isScrolling.current) return;
     const swipeDistance = touchStartY.current - touchEndY.current;
@@ -387,13 +393,7 @@ const RegistrationForm = () => {
 
 
           {/* ================= RIGHT COLUMN (Forms Card Wrapper) ================= */}
-          <div 
-            onWheel={handleWheel}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            className="lg:col-span-6 flex flex-col justify-center items-center w-full transition-all duration-300"
-          >
+          <div className="lg:col-span-6 flex flex-col justify-center items-center w-full transition-all duration-300">
             {/* Desktop form layout (Shown on lg sizes and above) */}
             <div className="hidden lg:flex w-full max-w-[500px] mx-auto">
               <form 
@@ -504,7 +504,13 @@ const RegistrationForm = () => {
             </div>
             
             {/* Mobile form layout (Shown on screens < lg) */}
-            <div className="w-full lg:hidden flex flex-col gap-6 relative pb-8">
+            <div 
+              onWheel={handleWheel}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              className="w-full lg:hidden flex flex-col gap-6 relative pb-8"
+            >
               <h2 className="text-[18px] md:text-[22px] font-bold tracking-wider text-center mb-1 text-white/90">
                 Register here
               </h2>
