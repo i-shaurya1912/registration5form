@@ -72,25 +72,27 @@ const RegistrationForm = () => {
     setErrors((prev) => ({ ...prev, [name]: err }));
   };
 
-  const handleNextStep = (event) => {
+  const handleNextStep = (event, shouldValidate = false) => {
     if (event?.preventDefault) event.preventDefault();
 
-    const page1Fields = ['name', 'studentNumber', 'email', 'gender'];
-    const newErrors = {};
-    let hasError = false;
+    if (shouldValidate) {
+      const page1Fields = ['name', 'studentNumber', 'email', 'gender'];
+      const newErrors = {};
+      let hasError = false;
 
-    page1Fields.forEach((field) => {
-      const err = validateFieldName(field, formData[field]);
-      if (err) {
-        newErrors[field] = err;
-        hasError = true;
+      page1Fields.forEach((field) => {
+        const err = validateFieldName(field, formData[field]);
+        if (err) {
+          newErrors[field] = err;
+          hasError = true;
+        }
+      });
+
+      if (hasError) {
+        setErrors(newErrors);
+        showToast('Please fix validation errors on page 1.');
+        return false;
       }
-    });
-
-    if (hasError) {
-      setErrors(newErrors);
-      showToast('Please fix validation errors on page 1.');
-      return false;
     }
 
     setStep(2);
@@ -103,6 +105,12 @@ const RegistrationForm = () => {
   };
 
   const isScrolling = useRef(false);
+
+  const isInteractiveTarget = (target) => {
+    if (!target) return false;
+    const interactiveTags = ['input', 'select', 'textarea', 'button', 'a'];
+    return interactiveTags.includes(target.tagName?.toLowerCase()) || target.closest?.('input, select, textarea, button, a');
+  };
 
   const isTargetScrollable = (target, currentTarget) => {
     let el = target;
@@ -117,7 +125,7 @@ const RegistrationForm = () => {
   };
 
   const handleWheel = (e) => {
-    if (isTargetScrollable(e.target, e.currentTarget)) return;
+    if (isTargetScrollable(e.target, e.currentTarget) || isInteractiveTarget(e.target)) return;
     if (isScrolling.current) {
       e.preventDefault();
       e.stopPropagation();
@@ -139,8 +147,9 @@ const RegistrationForm = () => {
   const touchEndY = useRef(null);
 
   const handleTouchStart = (e) => {
-    if (isTargetScrollable(e.target, e.currentTarget)) {
+    if (isTargetScrollable(e.target, e.currentTarget) || isInteractiveTarget(e.target)) {
       touchStartY.current = null;
+      touchEndY.current = null;
       return;
     }
     touchStartY.current = e.targetTouches[0].clientY;
@@ -150,7 +159,6 @@ const RegistrationForm = () => {
   const handleTouchMove = (e) => {
     if (touchStartY.current === null) return;
     touchEndY.current = e.targetTouches[0].clientY;
-    e.preventDefault();
   };
 
   const handleTouchEnd = (e) => {
@@ -158,13 +166,16 @@ const RegistrationForm = () => {
     if (isScrolling.current) return;
     const swipeDistance = touchStartY.current - touchEndY.current;
 
-    if (swipeDistance > 50) {
+    if (swipeDistance > 60) {
       e?.preventDefault?.();
       navigateNext();
-    } else if (swipeDistance < -50) {
+    } else if (swipeDistance < -60) {
       e?.preventDefault?.();
       navigatePrev();
     }
+
+    touchStartY.current = null;
+    touchEndY.current = null;
   };
 
   const navigateNext = () => {
@@ -226,7 +237,7 @@ const RegistrationForm = () => {
 
   return (
     <div
-      className="w-full max-w-[420px] lg:max-w-[1240px] mx-auto px-4 md:px-6 py-4 lg:py-8 flex flex-col items-center justify-between h-full text-white relative z-10 overflow-hidden touch-none"
+      className="w-full max-w-[420px] lg:max-w-[1240px] mx-auto px-4 md:px-6 py-4 pb-10 lg:py-8 flex flex-col items-start justify-start lg:justify-between min-h-[100dvh] lg:h-full text-white relative z-10 overflow-x-hidden overflow-y-visible touch-pan-y"
       onWheel={handleWheel}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
@@ -503,7 +514,7 @@ const RegistrationForm = () => {
             </div>
             
             {/* Mobile form layout (Shown on screens < lg) */}
-            <div className="w-full lg:hidden flex flex-col gap-6 relative pb-8">
+            <div className="w-full lg:hidden flex flex-col gap-6 relative pb-16">
               <h2 className="text-[18px] md:text-[22px] font-bold tracking-wider text-center mb-1 text-white/90">
                 Register here
               </h2>
@@ -568,7 +579,10 @@ const RegistrationForm = () => {
                   {/* Mobile Right Chevron Navigation Button */}
                   <button
                     type="button"
-                    onClick={handleNextStep}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      handleNextStep(event);
+                    }}
                     className="absolute -right-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-indigo-600/40 border border-indigo-500/30 rounded-full hover:bg-indigo-600/80 transition-all duration-300 hover:scale-105 select-none active:scale-95 shadow-md z-20 cursor-pointer"
                     aria-label="Next Step"
                   >
@@ -640,7 +654,10 @@ const RegistrationForm = () => {
                   {/* Mobile Left Chevron Navigation Button */}
                   <button
                     type="button"
-                    onClick={handlePrevStep}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      handlePrevStep(event);
+                    }}
                     className="absolute -left-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-indigo-600/40 border border-indigo-500/30 rounded-full hover:bg-indigo-600/80 transition-all duration-300 hover:scale-105 select-none active:scale-95 shadow-md z-20 cursor-pointer"
                     aria-label="Previous Step"
                   >
@@ -673,7 +690,7 @@ const RegistrationForm = () => {
       )}
       
       {/* Mobile-Only Mobile Footer Subtext (Header items occupy footer on mobile sizing) */}
-      <footer className="w-full flex lg:hidden flex-col items-center mt-3 text-center">
+      <footer className="w-full flex lg:hidden flex-col items-center mt-6 pb-6 text-center">
         <span className="text-[12px] font-bold tracking-[0.3em] uppercase text-white/95 mb-1.5 select-none">
           THINK.DEVELOP.DEPLOY
         </span>
