@@ -33,30 +33,48 @@ const FormField = ({
 
   const baseInputStyles = `
     w-full px-5 py-4 lg:py-5 bg-transparent rounded-xl text-white font-bold placeholder-[#5b6e9c]
-    border-2 transition-all duration-300 outline-none text-[14px] md:text-[15px] lg:text-[16px] tracking-wide
+    transition-all duration-300 outline-none text-[14px] md:text-[15px] lg:text-[16px] tracking-wide relative z-10
     ${error 
-      ? 'border-[#ff0055] shadow-[0_0_30px_rgba(255,0,85,0.6),inset_0_0_20px_rgba(255,0,85,0.2)] animate-shake' 
-      : (isOpen || isFocused 
-          ? 'border-[#00d2ff] shadow-[0_0_40px_rgba(0,210,255,0.6),inset_0_0_25px_rgba(0,210,255,0.25)]' 
-          : 'animate-border-flicker hover:border-[#00d2ff]/80 hover:shadow-[0_0_30px_rgba(0,210,255,0.4),inset_0_0_20px_rgba(0,210,255,0.15)]')
+      ? 'border-2 border-[#ff0055] shadow-[0_0_30px_rgba(255,0,85,0.6),inset_0_0_20px_rgba(255,0,85,0.2)] animate-shake' 
+      : 'border-2 border-transparent ' + (isOpen || isFocused 
+          ? 'shadow-[0_0_40px_rgba(0,210,255,0.6),inset_0_0_25px_rgba(0,210,255,0.25)]' 
+          : 'animate-input-shadow hover:shadow-[0_0_30px_rgba(0,210,255,0.4),inset_0_0_20px_rgba(0,210,255,0.15)]')
     }
   `;
+
+  const GradientBorder = ({ isActive }) => (
+    <div 
+      className={`absolute inset-0 pointer-events-none rounded-xl transition-all duration-300 z-0 ${!isActive ? 'animate-input-border' : ''}`}
+      style={{
+        padding: '2px', // Matches border-2
+        background: 'linear-gradient(to bottom right, #ffffff, #00d2ff, #a855f7)',
+        WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+        WebkitMaskComposite: 'xor',
+        maskComposite: 'exclude'
+      }}
+    />
+  );
 
   return (
     <div className={`w-full relative group transition-all duration-300 ${isOpen ? 'z-[100]' : 'z-30'}`}>
       <style>{`
-        @keyframes border-flicker {
+        @keyframes input-shadow-flicker {
           0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
-            border-color: rgba(0, 210, 255, 0.6);
             box-shadow: 0 0 30px rgba(0, 210, 255, 0.35), inset 0 0 15px rgba(0, 210, 255, 0.1);
           }
           20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
-            border-color: rgba(0, 210, 255, 0.1);
             box-shadow: none;
           }
         }
-        .animate-border-flicker {
-          animation: border-flicker 8s infinite;
+        .animate-input-shadow {
+          animation: input-shadow-flicker 8s infinite;
+        }
+        @keyframes input-border-flicker {
+          0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 0.8; }
+          20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.15; }
+        }
+        .animate-input-border {
+          animation: input-border-flicker 8s infinite;
         }
       `}</style>
 
@@ -81,6 +99,7 @@ const FormField = ({
               </svg>
             </motion.div>
           </div>
+          {!error && <GradientBorder isActive={isOpen} />}
 
           <AnimatePresence>
             {isOpen && (
@@ -89,37 +108,56 @@ const FormField = ({
                 animate={{ opacity: 1, y: 0, scale: 1 }} 
                 exit={{ opacity: 0, y: -5, scale: 0.98 }} 
                 transition={{ duration: 0.15 }} 
-                className="absolute top-full left-0 right-0 mt-2 p-1.5 bg-[#050b18]/95 backdrop-blur-xl border border-[#00d2ff]/30 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] z-[100] max-h-[220px] overflow-y-auto"
-                style={{ scrollbarWidth: 'thin', scrollbarColor: '#00d2ff transparent' }}
+                className="absolute top-full left-0 right-0 mt-2 z-[100]"
               >
-                {options.map((opt) => (
-                  <div 
-                    key={opt.value} 
-                    onClick={() => handleSelect(opt.value)} 
-                    className={`
-                      px-4 py-3 rounded-lg cursor-pointer text-[13px] md:text-[14px] font-medium transition-all duration-200
-                      hover:bg-[#00d2ff]/10 hover:text-[#00d2ff] 
-                      ${value === opt.value ? 'text-[#00d2ff] bg-[#00d2ff]/15 font-semibold' : 'text-white/80'}
-                    `}
-                  >
-                    {opt.label}
-                  </div>
-                ))}
+                <div 
+                  className="w-full relative p-1.5 bg-[#050b18]/95 backdrop-blur-xl rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] max-h-[220px] overflow-y-auto"
+                  style={{ scrollbarWidth: 'thin', scrollbarColor: '#00d2ff transparent' }}
+                >
+                  {options.map((opt) => (
+                    <div 
+                      key={opt.value} 
+                      onClick={() => handleSelect(opt.value)} 
+                      className={`
+                        px-4 py-3 rounded-lg cursor-pointer text-[13px] md:text-[14px] font-medium transition-all duration-200
+                        hover:bg-[#00d2ff]/10 hover:text-[#00d2ff] 
+                        ${value === opt.value ? 'text-[#00d2ff] bg-[#00d2ff]/15 font-semibold' : 'text-white/80'}
+                      `}
+                    >
+                      {opt.label}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Gradient Border for Dropdown Popup (Placed after so it renders on top) */}
+                <div 
+                  className="absolute inset-0 pointer-events-none rounded-xl z-10"
+                  style={{
+                    padding: '1.5px', // slightly thicker to be visible over background
+                    background: 'linear-gradient(to bottom right, #ffffff, #00d2ff, #a855f7)',
+                    WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                    WebkitMaskComposite: 'xor',
+                    maskComposite: 'exclude'
+                  }}
+                />
               </motion.div>
             )}
           </AnimatePresence>
         </div>
       ) : (
-        <input
-          type={type}
-          name={name}
-          value={value}
-          onChange={onChange}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          placeholder={placeholder}
-          className={baseInputStyles}
-        />
+        <div className="relative w-full">
+          <input
+            type={type}
+            name={name}
+            value={value}
+            onChange={onChange}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            placeholder={placeholder}
+            className={baseInputStyles}
+          />
+          {!error && <GradientBorder isActive={isFocused} />}
+        </div>
       )}
 
       {/* Field Level Error Message */}

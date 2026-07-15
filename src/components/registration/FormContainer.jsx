@@ -117,17 +117,22 @@ export const FormContainer = ({
       <style>{`
         @keyframes form-flicker {
           0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
-            border-color: rgba(0, 210, 255, 0.4);
             box-shadow: 0 15px 50px rgba(0,0,0,0.5), 0 0 50px rgba(0, 210, 255, 0.2), inset 0 0 20px rgba(0, 210, 255, 0.1);
           }
           20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
-            border-color: rgba(255, 255, 255, 0.1);
             box-shadow: 0 15px 50px rgba(0,0,0,0.5);
           }
+        }
+        @keyframes border-flicker {
+          0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 1; }
+          20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.15; }
         }
         @media (min-width: 1024px) {
           .animate-form-flicker {
             animation: form-flicker 8s infinite;
+          }
+          .animate-border-flicker {
+            animation: border-flicker 8s infinite;
           }
         }
       `}</style>
@@ -138,8 +143,20 @@ export const FormContainer = ({
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="w-full max-w-[460px] lg:max-w-[520px] xl:max-w-[580px] mx-auto flex flex-col items-center justify-center relative min-h-[480px] lg:min-h-[500px] px-2 md:px-0 py-4 lg:border lg:border-white/10 lg:rounded-[32px] lg:bg-[#001133]/60 lg:backdrop-blur-2xl lg:shadow-[0_15px_50px_rgba(0,0,0,0.5)] lg:px-12 lg:py-10 animate-form-flicker"
+        className="w-full max-w-[460px] lg:max-w-[520px] xl:max-w-[580px] mx-auto flex flex-col items-center justify-center relative min-h-[480px] lg:min-h-[500px] px-2 md:px-0 py-4 lg:rounded-[32px] lg:bg-[#001133]/60 lg:backdrop-blur-2xl lg:shadow-[0_15px_50px_rgba(0,0,0,0.5)] lg:px-12 lg:py-10 animate-form-flicker"
       >
+        {/* Gradient Border Mask (Desktop Only) */}
+        <div 
+          className="hidden lg:block absolute inset-0 pointer-events-none rounded-[32px] animate-border-flicker"
+          style={{
+            padding: '1.5px', // Border thickness
+            background: 'linear-gradient(to bottom right, #ffffff, #00d2ff, #a855f7)',
+            WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+            WebkitMaskComposite: 'xor',
+            maskComposite: 'exclude'
+          }}
+        />
+        
         <div className="w-full relative flex-1 flex flex-col justify-start pt-4 min-h-[420px] md:min-h-[480px]">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
