@@ -78,10 +78,10 @@ export const BrandingSection = ({ showPoster, setShowPoster, handleClosePoster, 
         <div className="hidden lg:block absolute -left-[40px] top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-[#00d2ff]/50 to-transparent"></div>
 
         <div className="flex items-center gap-3 mb-4 hover:scale-102 transition-transform duration-300 bg-white/5 pr-4 pl-2 py-1.5 rounded-full border border-white/10 backdrop-blur-md">
-          <motion.img 
-            src="/cccLogo.png" 
-            alt="CCC Logo" 
-            className="w-[28px] h-[28px] object-contain drop-shadow-[0_0_8px_rgba(0,210,255,0.5)]" 
+          <motion.img
+            src="/cccLogo.png"
+            alt="CCC Logo"
+            className="w-[28px] h-[28px] object-contain drop-shadow-[0_0_8px_rgba(0,210,255,0.5)]"
             animate={{ rotate: 360 }}
             transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
           />
@@ -104,7 +104,7 @@ export const BrandingSection = ({ showPoster, setShowPoster, handleClosePoster, 
       </div>
 
       {/* 2. MIDDLE SECTION (Poster Button & Desktop Details) */}
-      <div className="flex flex-col lg:flex-row items-center lg:items-start w-full gap-8 relative z-10">
+      <div className="flex flex-col lg:flex-row items-center lg:items-start w-full gap-8 relative z-10 mt-4">
 
         {/* View Poster button (MOBILE ONLY) */}
         <button
@@ -168,7 +168,7 @@ export const BrandingSection = ({ showPoster, setShowPoster, handleClosePoster, 
         >
           REGISTER NOW
         </button>
-        
+
         {/* Mobile Coordinators */}
         {renderCoordinators()}
       </div>
