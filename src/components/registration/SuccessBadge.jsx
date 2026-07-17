@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-export const SuccessBadge = ({ formData, registrationId, resetForm }) => {
+export const SuccessBadge = ({ formData, registrationData = {}, resetForm }) => {
   return (
     <motion.div 
       initial={{ opacity: 0, scale: 0.95, y: 10 }}
@@ -32,7 +32,7 @@ export const SuccessBadge = ({ formData, registrationId, resetForm }) => {
         
         <div className="text-[10px] text-[#00d2ff]/70 tracking-[0.3em] font-bold uppercase mb-1">REGISTRATION ID</div>
         <div className="text-xl md:text-2xl font-black tracking-widest text-white drop-shadow-md mb-6 select-all">
-          {registrationId}
+          {registrationData.id || formData.studentNumber}
         </div>
         
         <div className="grid grid-cols-2 gap-y-6 gap-x-4 text-sm">

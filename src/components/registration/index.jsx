@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { validateFieldName, validateForm } from '../../validations/formValidation';
+import { validateField, validateForm } from '../../validations/formValidation';
+import { sendOtp, verifyOtp } from '../../services/registrationApi';
 import { BrandingSection } from './BrandingSection';
 import { FormContainer } from './FormContainer';
 import { SuccessBadge } from './SuccessBadge';
@@ -22,14 +23,15 @@ const RegistrationMain = () => {
     gender: '',
     branch: '',
     phoneNumber: '',
-    unstopId: '',
     residence: ''
   });
   const [errors, setErrors] = useState({});
   const [toast, setToast] = useState({ show: false, message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
-  const [registrationId, setRegistrationId] = useState('');
+  const [registrationData, setRegistrationData] = useState({ id: '', name: '' });
+  const [sessionToken, setSessionToken] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState('');
 
   const showToast = (message) => {
     setToast({ show: true, message });
@@ -83,8 +85,15 @@ const RegistrationMain = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    const err = validateFieldName(name, value);
+    const updatedData = { ...formData, [name]: value };
+    const err = validateField(name, value, updatedData);
     setErrors((prev) => ({ ...prev, [name]: err }));
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    const err = validateField(name, value, formData);
+    if (err) setErrors((prev) => ({ ...prev, [name]: err }));
   };
 
   const navigateNext = () => {
@@ -101,48 +110,63 @@ const RegistrationMain = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateForm(formData);
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       showToast('Please fill all fields correctly before submitting.');
-
       const page1Fields = ['name', 'studentNumber', 'email', 'gender'];
-      if (page1Fields.some(field => validationErrors[field])) {
-        if (step !== 1) {
-          setDirection(-1);
-          setStep(1);
-        }
+      if (page1Fields.some(field => validationErrors[field]) && step !== 1) {
+        setDirection(-1);
+        setStep(1);
       }
       return;
     }
 
     setIsSubmitting(true);
-
-    // Simulate API call to send OTP, then slide to Step 3
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const payload = {
+        studentId: formData.studentNumber,
+        name: formData.name,
+        branch: formData.branch,
+        gender: formData.gender,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        residence: formData.residence,
+        cfTurnstileResponse: turnstileToken || 'dev-bypass',
+      };
+      const data = await sendOtp(payload);
+      setSessionToken(data.sessionToken);
       showToast('OTP sent to your email!');
       setDirection(1);
-      setStep(3); // Slide to OTP Step
-    }, 1200);
+      setStep(3);
+    } catch (err) {
+      if (err.errors) {
+        setErrors(err.errors);
+      }
+      showToast(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleVerifyOtp = (otpCode) => {
+  const handleVerifyOtp = async (otpCode) => {
     setIsSubmitting(true);
-    // Simulate API call to verify OTP and register
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const data = await verifyOtp(sessionToken, otpCode);
+      setRegistrationData({ id: data.studentId, name: data.name });
       setIsRegistered(true);
-      setRegistrationId(`CCC-SP26-${Math.floor(10000 + Math.random() * 90000)}`);
       showToast('Registration Successful!');
-    }, 1500);
+    } catch (err) {
+      showToast(err.message || 'Invalid OTP. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleCancelOtp = () => {
-    // Go back to form step 2
     setDirection(-1);
     setStep(2);
   };
@@ -150,11 +174,14 @@ const RegistrationMain = () => {
   const resetForm = () => {
     setFormData({
       name: '', studentNumber: '', email: '', gender: '',
-      branch: '', phoneNumber: '', unstopId: '', residence: ''
+      branch: '', phoneNumber: '', residence: ''
     });
     setErrors({});
     setStep(1);
     setIsRegistered(false);
+    setSessionToken('');
+    setTurnstileToken('');
+    setRegistrationData({ id: '', name: '' });
   };
 
   return (
@@ -231,8 +258,8 @@ const RegistrationMain = () => {
                 {isRegistered ? (
                   <SuccessBadge 
                     key="success" 
-                    formData={formData} 
-                    registrationId={registrationId} 
+                    formData={formData}
+                    registrationData={registrationData}
                     resetForm={() => {
                       resetForm();
                       setMobileView('branding');
@@ -247,12 +274,14 @@ const RegistrationMain = () => {
                     errors={errors}
                     isSubmitting={isSubmitting}
                     handleInputChange={handleInputChange}
+                    handleBlur={handleBlur}
                     handleSubmit={handleSubmit}
                     handleVerifyOtp={handleVerifyOtp}
                     handleCancelOtp={handleCancelOtp}
                     navigateNext={navigateNext}
                     navigatePrev={navigatePrev}
                     onBackToBranding={() => setMobileView('branding')}
+                    onTurnstileSuccess={(token) => setTurnstileToken(token)}
                   />
                 )}
               </AnimatePresence>

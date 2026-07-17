@@ -11,12 +11,14 @@ export const FormContainer = ({
   errors,
   isSubmitting,
   handleInputChange,
+  handleBlur,
   handleSubmit,
   handleVerifyOtp,
   handleCancelOtp,
   navigateNext,
   navigatePrev,
-  onBackToBranding
+  onBackToBranding,
+  onTurnstileSuccess,
 }) => {
   const isScrolling = useRef(false);
   const touchStartY = useRef(null);
@@ -192,13 +194,27 @@ export const FormContainer = ({
               className="absolute inset-0 flex flex-col gap-5 md:gap-6 w-full justify-start pt-2 pb-12"
             >
               {step === 1 && (
-                <StepOne formData={formData} errors={errors} handleInputChange={handleInputChange} />
+                <StepOne formData={formData} errors={errors} handleInputChange={handleInputChange} handleBlur={handleBlur} />
               )}
               {step === 2 && (
-                <StepTwo formData={formData} errors={errors} handleInputChange={handleInputChange} isSubmitting={isSubmitting} />
+                <>
+                  <StepTwo formData={formData} errors={errors} handleInputChange={handleInputChange} handleBlur={handleBlur} isSubmitting={isSubmitting} />
+                  <div
+                    className="cf-turnstile mx-auto mt-2"
+                    data-sitekey="0x4AAAAAAD13esM5_c7RQk8C"
+                    data-callback="onTurnstileSuccess"
+                    data-theme="dark"
+                    data-size="flexible"
+                    ref={(el) => {
+                      if (el && onTurnstileSuccess) {
+                        window.onTurnstileSuccess = onTurnstileSuccess;
+                      }
+                    }}
+                  />
+                </>
               )}
               {step === 3 && (
-                <StepThree onVerify={handleVerifyOtp} isSubmitting={isSubmitting} onCancel={handleCancelOtp} />
+                <StepThree onVerify={handleVerifyOtp} isSubmitting={isSubmitting} onCancel={handleCancelOtp} onResend={handleCancelOtp} />
               )}
             </motion.div>
           </AnimatePresence>

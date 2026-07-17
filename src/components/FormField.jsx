@@ -7,6 +7,7 @@ const FormField = ({
   value,
   placeholder,
   onChange,
+  onBlur,
   error,
   options = [],
 }) => {
@@ -58,23 +59,25 @@ const FormField = ({
   return (
     <div className={`w-full relative group transition-all duration-300 ${isOpen ? 'z-[100]' : 'z-30'}`}>
       <style>{`
-        @keyframes input-shadow-flicker {
-          0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
-            box-shadow: 0 0 30px rgba(0, 210, 255, 0.35), inset 0 0 15px rgba(0, 210, 255, 0.1);
+        @media (min-width: 1024px) {
+          @keyframes input-shadow-flicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+              box-shadow: 0 0 30px rgba(0, 210, 255, 0.35), inset 0 0 15px rgba(0, 210, 255, 0.1);
+            }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+              box-shadow: none;
+            }
           }
-          20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
-            box-shadow: none;
+          .animate-input-shadow {
+            animation: input-shadow-flicker 8s infinite;
           }
-        }
-        .animate-input-shadow {
-          animation: input-shadow-flicker 8s infinite;
-        }
-        @keyframes input-border-flicker {
-          0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 0.8; }
-          20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.15; }
-        }
-        .animate-input-border {
-          animation: input-border-flicker 8s infinite;
+          @keyframes input-border-flicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 0.9; }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.15; }
+          }
+          .animate-input-border {
+            animation: input-border-flicker 8s infinite;
+          }
         }
       `}</style>
 
@@ -152,7 +155,10 @@ const FormField = ({
             value={value}
             onChange={onChange}
             onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
+            onBlur={(e) => {
+              setIsFocused(false);
+              if (onBlur) onBlur(e);
+            }}
             placeholder={placeholder}
             className={baseInputStyles}
           />

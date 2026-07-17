@@ -2,7 +2,7 @@ import React from 'react';
 import { FormField } from '../../FormField';
 import { BRANCH_OPTIONS, RESIDENCE_OPTIONS } from '../constants';
 
-export const StepTwo = ({ formData, errors, handleInputChange, isSubmitting }) => {
+export const StepTwo = ({ formData, errors, handleInputChange, handleBlur, isSubmitting }) => {
   return (
     <>
       <div className="w-full flex flex-col gap-6 relative">
@@ -18,20 +18,14 @@ export const StepTwo = ({ formData, errors, handleInputChange, isSubmitting }) =
         <FormField 
           name="phoneNumber" 
           value={formData.phoneNumber} 
-          onChange={handleInputChange} 
+          onChange={handleInputChange}
+          onBlur={handleBlur}
           placeholder="Enter Phone Number"
           error={errors.phoneNumber}
         />
       </div>
 
       <div className="w-full flex flex-col gap-6 relative">
-        <FormField 
-          name="unstopId" 
-          value={formData.unstopId} 
-          onChange={handleInputChange} 
-          placeholder="Enter Unstop Id or (NaN)"
-          error={errors.unstopId}
-        />
         <FormField 
           type="select" 
           name="residence" 

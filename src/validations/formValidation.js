@@ -1,55 +1,59 @@
-export const validateFieldName = (name, value) => {
+const BRANCHES = ['CSE', 'CSE(AIML)', 'CSE(DS)', 'AIML', 'CS', 'CSE(H)', 'IT', 'CSIT', 'ECE', 'EN', 'Civil', 'ME'];
+const GENDERS = ['Male', 'Female'];
+const RESIDENCES = ['Hosteller', 'Day Scholar'];
+
+const NAME_REGEX = /^[A-Za-z ]+$/;
+const STUDENT_NO_REGEX = /^25[0-9]{5,6}$/;
+const EMAIL_REGEX = /^[a-z.]{3,}[0-9]+@akgec\.ac\.in$/;
+const PHONE_REGEX = /^[6-9]\d{9}$/;
+
+export const validateField = (name, value, formData = {}) => {
+  const v = typeof value === 'string' ? value.trim() : value;
+
   switch (name) {
     case 'name':
-      if (!value.trim()) return 'Name is required';
-      if (!/^[a-zA-Z\s]{2,50}$/.test(value.trim())) {
-        return 'Name must contain only alphabets and be 2-50 characters';
-      }
+      if (!v) return 'Name is required';
+      if (v.length < 3) return 'Min 3 characters';
+      if (v.length > 50) return 'Invalid Name';
+      if (!NAME_REGEX.test(v)) return 'Invalid Name';
       return '';
 
     case 'studentNumber':
-      if (!value.trim()) return 'Student number is required';
-      if (!/^\d{7}$/.test(value.trim())) {
-        return 'Student number must be exactly 7 digits (e.g., 2312040)';
-      }
+      if (!v) return 'Student number is required';
+      if (!STUDENT_NO_REGEX.test(v)) return 'Invalid Student Number';
       return '';
 
     case 'email': {
-      if (!value.trim()) return 'College Email ID is required';
-      // Simple check for valid email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(value)) {
-        return 'Please enter a valid email address';
-      }
-      // If we want to recommend/check college domain specifically:
-      if (!value.toLowerCase().endsWith('@akgec.ac.in') && !value.toLowerCase().includes('.akgec.')) {
-        // Optional warning indicator or standard validation, let's keep it advisory or allow all
-        // to prevent lockouts, but we can do a softer warning or enforce. Let's make it advisory.
+      if (!v) return 'Email is required';
+      const lower = v.toLowerCase();
+      if (!lower.endsWith('@akgec.ac.in')) return 'Invalid Email';
+      if (!EMAIL_REGEX.test(lower)) return 'Invalid Email';
+      const localPart = lower.split('@')[0];
+      const numMatch = localPart.match(/(\d+)$/);
+      if (numMatch && formData.studentNumber && numMatch[0] !== formData.studentNumber.trim()) {
+        return 'Invalid Email';
       }
       return '';
     }
 
     case 'gender':
-      if (!value) return 'Gender is required';
+      if (!v) return 'Select gender';
+      if (!GENDERS.includes(v)) return 'Select gender';
       return '';
 
     case 'branch':
-      if (!value) return 'Branch is required';
+      if (!v) return 'Select branch';
+      if (!BRANCHES.includes(v)) return 'Select branch';
       return '';
 
     case 'phoneNumber':
-      if (!value.trim()) return 'Phone number is required';
-      if (!/^\d{10}$/.test(value.trim())) {
-        return 'Phone number must be exactly 10 digits';
-      }
-      return '';
-
-    case 'unstopId':
-      if (!value.trim()) return 'Unstop ID is required. (Enter NaN if not registered)';
+      if (!v) return 'Phone number is required';
+      if (!PHONE_REGEX.test(v)) return 'Invalid phone number (10 digits, starts with 6-9)';
       return '';
 
     case 'residence':
-      if (!value) return 'Residence select is required';
+      if (!v) return 'Select residence';
+      if (!RESIDENCES.includes(v)) return 'Select residence';
       return '';
 
     default:
@@ -59,11 +63,12 @@ export const validateFieldName = (name, value) => {
 
 export const validateForm = (data) => {
   const errors = {};
-  Object.keys(data).forEach((key) => {
-    const err = validateFieldName(key, data[key]);
-    if (err) {
-      errors[key] = err;
-    }
+  const fields = ['name', 'studentNumber', 'email', 'gender', 'branch', 'phoneNumber', 'residence'];
+  fields.forEach((key) => {
+    const err = validateField(key, data[key], data);
+    if (err) errors[key] = err;
   });
   return errors;
 };
+
+export const validateFieldName = validateField;
