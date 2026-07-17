@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { StepOne } from './steps/StepOne';
 import { StepTwo } from './steps/StepTwo';
 import { StepThree } from './steps/StepThree';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 export const FormContainer = ({
   step,
@@ -19,6 +20,7 @@ export const FormContainer = ({
   navigatePrev,
   onBackToBranding,
   onTurnstileSuccess,
+  recaptchaRef,
 }) => {
   const isScrolling = useRef(false);
   const touchStartY = useRef(null);
@@ -199,18 +201,26 @@ export const FormContainer = ({
               {step === 2 && (
                 <>
                   <StepTwo formData={formData} errors={errors} handleInputChange={handleInputChange} handleBlur={handleBlur} isSubmitting={isSubmitting} />
-                  <div
-                    className="cf-turnstile mx-auto mt-2"
-                    data-sitekey="0x4AAAAAAD13esM5_c7RQk8C"
-                    data-callback="onTurnstileSuccess"
-                    data-theme="dark"
-                    data-size="flexible"
-                    ref={(el) => {
-                      if (el && onTurnstileSuccess) {
-                        window.onTurnstileSuccess = onTurnstileSuccess;
-                      }
-                    }}
-                  />
+                  {import.meta.env.VITE_RECAPTCHA_SITE_KEY ? (
+                    <ReCAPTCHA
+                      ref={recaptchaRef}
+                      size="invisible"
+                      sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                    />
+                  ) : (
+                    <div
+                      className="cf-turnstile mx-auto mt-2"
+                      data-sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                      data-callback="onTurnstileSuccess"
+                      data-theme="dark"
+                      data-size="flexible"
+                      ref={(el) => {
+                        if (el && onTurnstileSuccess) {
+                          window.onTurnstileSuccess = onTurnstileSuccess;
+                        }
+                      }}
+                    />
+                  )}
                 </>
               )}
               {step === 3 && (

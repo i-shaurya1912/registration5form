@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { validateField, validateForm } from '../../validations/formValidation';
 import { sendOtp, verifyOtp } from '../../services/registrationApi';
@@ -32,6 +32,7 @@ const RegistrationMain = () => {
   const [registrationData, setRegistrationData] = useState({ id: '', name: '' });
   const [sessionToken, setSessionToken] = useState('');
   const [turnstileToken, setTurnstileToken] = useState('');
+  const recaptchaRef = useRef(null);
 
   const showToast = (message) => {
     setToast({ show: true, message });
@@ -127,6 +128,11 @@ const RegistrationMain = () => {
 
     setIsSubmitting(true);
     try {
+      let captchaToken = turnstileToken || 'dev-bypass';
+      if (recaptchaRef.current) {
+        captchaToken = await recaptchaRef.current.executeAsync();
+      }
+
       const payload = {
         studentId: formData.studentNumber,
         name: formData.name,
@@ -135,7 +141,7 @@ const RegistrationMain = () => {
         email: formData.email,
         phoneNumber: formData.phoneNumber,
         residence: formData.residence,
-        cfTurnstileResponse: turnstileToken || 'dev-bypass',
+        cfTurnstileResponse: captchaToken,
       };
       const data = await sendOtp(payload);
       setSessionToken(data.sessionToken);
@@ -282,6 +288,7 @@ const RegistrationMain = () => {
                     navigatePrev={navigatePrev}
                     onBackToBranding={() => setMobileView('branding')}
                     onTurnstileSuccess={(token) => setTurnstileToken(token)}
+                    recaptchaRef={recaptchaRef}
                   />
                 )}
               </AnimatePresence>
