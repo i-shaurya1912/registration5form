@@ -8,6 +8,7 @@ import { SuccessBadge } from './SuccessBadge';
 import BackgroundGrid from '../BackgroundGrid';
 import { CustomCursor } from '../CustomCursor';
 import SideRays from '../SideRays';
+import Mascot from '../Mascot';
 
 const RegistrationMain = () => {
   const [step, setStep] = useState(1);
@@ -194,6 +195,7 @@ const RegistrationMain = () => {
     <div className="relative min-h-screen w-full antialiased overflow-x-hidden max-lg:overflow-y-hidden selection:bg-[#00d2ff]/30 cursor-none lg:cursor-none text-white">
       <CustomCursor />
       <BackgroundGrid />
+      <Mascot />
 
       {/* Epic Volumetric Background Rays for the entire page */}
       <div className="absolute inset-0 z-[1] pointer-events-none mix-blend-screen opacity-60">
