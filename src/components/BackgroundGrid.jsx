@@ -116,8 +116,8 @@ const BackgroundGrid = () => {
         nodes.push({
           x: Math.random() * w,
           y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: (Math.random() - 0.5) * 0.3,
+          vx: (Math.random() - 0.5) * 0.1,
+          vy: (Math.random() - 0.5) * 0.1,
           r: Math.random() * 1.4 + 1
         });
       }
@@ -129,10 +129,10 @@ const BackgroundGrid = () => {
       const a = nodes[Math.floor(Math.random() * nodes.length)];
       const b = nodes[Math.floor(Math.random() * nodes.length)];
       if (a === b) return;
-      packets.push({ a, b, t: 0, speed: 0.006 + Math.random() * 0.012, trail: [] });
+      packets.push({ a, b, t: 0, speed: 0.003 + Math.random() * 0.004, trail: [] });
     }
 
-    const packetInterval = setInterval(spawnPacket, 150);
+    const packetInterval = setInterval(spawnPacket, 400);
 
     // Initialize dimensions and contents
     resize();
