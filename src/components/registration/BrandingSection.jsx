@@ -106,24 +106,12 @@ export const BrandingSection = ({ showPoster, setShowPoster, handleClosePoster, 
       {/* 2. MIDDLE SECTION (Poster Button & Desktop Details) */}
       <div className="flex flex-col lg:flex-row items-center lg:items-start w-full gap-8 relative z-10 mt-4">
 
-        {/* View Poster button (MOBILE ONLY) */}
-        <button
-          onClick={() => setShowPoster(true)}
-          className="lg:hidden group relative px-10 py-3.5 rounded-full bg-transparent overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-[#00d2ff]/20 to-[#a855f7]/20 border border-white/20 rounded-full group-hover:border-[#00d2ff]/60 transition-colors duration-300" />
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-r from-[#00d2ff]/40 to-[#a855f7]/40 blur-md transition-opacity duration-300" />
-          <span className="relative z-10 text-[13px] font-black tracking-[0.25em] text-white drop-shadow-md">
-            VIEW POSTER
-          </span>
-        </button>
-
-        {/* Desktop Poster Wrapper (Rays placed here) */}
-        <div className="hidden lg:flex relative">
-          {/* Embedded Poster (DESKTOP ONLY) */}
-          <div className="relative w-[220px] xl:w-[260px] shrink-0 rounded-xl overflow-hidden border border-white/10 drop-shadow-[0_0_20px_rgba(0,210,255,0.15)] hover:border-[#00d2ff]/50 hover:scale-[1.02] transition-all duration-500 cursor-pointer group" onClick={() => setShowPoster(true)}>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
-              <span className="text-white text-[10px] font-bold tracking-[0.2em] bg-black/50 px-3 py-1.5 rounded-full backdrop-blur-md">CLICK TO ENLARGE</span>
+        {/* Poster Wrapper (Visible on both Mobile and Desktop) */}
+        <div className="flex relative">
+          {/* Embedded Poster */}
+          <div className="relative w-[130px] md:w-[170px] lg:w-[220px] xl:w-[260px] shrink-0 rounded-xl overflow-hidden border border-white/10 drop-shadow-[0_0_20px_rgba(0,210,255,0.15)] hover:border-[#00d2ff]/50 hover:scale-[1.02] transition-all duration-500 cursor-pointer group" onClick={() => setShowPoster(true)}>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-3 lg:pb-4">
+              <span className="text-white text-[9px] lg:text-[10px] font-bold tracking-[0.2em] bg-black/50 px-2.5 py-1 lg:px-3 lg:py-1.5 rounded-full backdrop-blur-md">CLICK TO ENLARGE</span>
             </div>
             <img src={posterImg} alt="SPOCC'26 Poster" className="w-full h-auto object-cover opacity-90 group-hover:opacity-100 transition-opacity relative z-10" />
           </div>
@@ -161,10 +149,10 @@ export const BrandingSection = ({ showPoster, setShowPoster, handleClosePoster, 
       </div>
 
       {/* 3. MOBILE ONLY: MASSIVE REGISTER BUTTON */}
-      <div className="lg:hidden w-full flex flex-col items-center justify-center mt-12 mb-auto flex-1 px-4 gap-6">
+      <div className="lg:hidden w-full flex flex-col items-center justify-center mt-5 mb-auto flex-1 px-4 gap-4">
         <button
           onClick={onRegisterClick}
-          className="w-full max-w-[400px] py-5 rounded-2xl font-black bg-gradient-to-r from-[#00d2ff] to-[#bd22ff] border border-[#00d2ff]/40 text-[16px] tracking-[0.25em] text-white shadow-[0_0_30px_rgba(0,210,255,0.4)] hover:scale-105 transition-transform duration-300 active:scale-95"
+          className="w-full max-w-[400px] py-4 rounded-xl font-black bg-gradient-to-r from-[#00d2ff] to-[#bd22ff] border border-[#00d2ff]/40 text-[14px] tracking-[0.25em] text-white shadow-[0_0_30px_rgba(0,210,255,0.4)] hover:scale-105 transition-transform duration-300 active:scale-95"
         >
           REGISTER NOW
         </button>
@@ -174,7 +162,7 @@ export const BrandingSection = ({ showPoster, setShowPoster, handleClosePoster, 
       </div>
 
       {/* 4. MOBILE-ONLY FOOTER SUBTEXT (Pushed to bottom) */}
-      <div className="lg:hidden w-full flex flex-col items-center text-center mt-8 pb-2">
+      <div className="lg:hidden w-full flex flex-col items-center text-center mt-5 pb-2">
         <span className="text-[13px] font-extrabold tracking-[0.35em] uppercase text-white mb-2 select-none drop-shadow-md">
           THINK.DEVELOP.DEPLOY
         </span>
