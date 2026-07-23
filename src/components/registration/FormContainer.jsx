@@ -78,7 +78,7 @@ export const FormContainer = ({
       initial={{ opacity: 0, filter: 'blur(10px)', y: 20 }}
       animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
       transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
-      className="lg:col-span-6 flex flex-col justify-between lg:justify-center items-center w-full transition-all duration-300 h-full py-2 lg:py-0 relative"
+      className="lg:col-span-6 flex flex-col justify-center items-center gap-3 w-full transition-all duration-300 h-full py-2 lg:py-0 relative"
     >
       {/* Reused Mobile Header (Logo & SPOCC'26) */}
       <div className="lg:hidden flex flex-col items-center mt-2 mb-2 animate-fade-in w-full relative">
@@ -86,7 +86,7 @@ export const FormContainer = ({
         <button
           type="button"
           onClick={onBackToBranding}
-          className="absolute left-0 top-0 flex items-center justify-center w-10 h-10 rounded-full bg-[#00d2ff]/10 text-[#00d2ff] hover:text-white hover:bg-[#00d2ff]/20 border border-[#00d2ff]/30 transition-all active:scale-95 cursor-pointer shadow-[0_0_15px_rgba(0,210,255,0.15)]"
+          className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-[#00d2ff]/10 text-[#00d2ff] hover:text-white hover:bg-[#00d2ff]/20 border border-[#00d2ff]/30 transition-all active:scale-95 cursor-pointer shadow-[0_0_15px_rgba(0,210,255,0.15)]"
         >
           <svg className="w-5 h-5 pr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" /></svg>
         </button>
@@ -135,7 +135,7 @@ export const FormContainer = ({
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="w-full max-w-[460px] lg:max-w-[520px] xl:max-w-[580px] mx-auto flex flex-col items-center justify-center relative max-lg:min-h-0 lg:min-h-[500px] lg:h-[660px] px-2 md:px-0 py-2.5 lg:py-4 lg:rounded-[32px] lg:bg-[#001133]/60 lg:backdrop-blur-2xl lg:shadow-[0_15px_50px_rgba(0,0,0,0.5)] lg:px-12 lg:py-10 animate-form-flicker max-lg:overflow-y-hidden"
+        className="w-full max-w-[460px] lg:max-w-[520px] xl:max-w-[580px] mx-auto flex flex-col items-center justify-center relative max-lg:min-h-0 lg:min-h-[500px] lg:h-[660px] px-5 py-5 max-lg:rounded-2xl lg:rounded-[32px] max-lg:bg-[#001133]/45 lg:bg-[#001133]/60 max-lg:backdrop-blur-xl lg:backdrop-blur-2xl max-lg:border max-lg:border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.4)] lg:shadow-[0_15px_50px_rgba(0,0,0,0.5)] lg:px-12 lg:py-10 animate-form-flicker max-lg:overflow-y-hidden"
       >
         {/* Gradient Border Mask (Desktop Only) */}
         <div 
