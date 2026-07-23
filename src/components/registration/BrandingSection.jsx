@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaFacebook, FaLinkedin, FaInstagram } from 'react-icons/fa';
 import PosterCard from '../PosterCard';
-import posterImg from '../elements/Main_Poster_Optimized.jpg';
+import posterImg from '../elements/Main Poster.svg';
 import SideRays from '../SideRays';
 
 export const BrandingSection = ({ showPoster, setShowPoster, handleClosePoster, isClosing, onRegisterClick }) => {

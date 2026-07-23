@@ -1,5 +1,5 @@
 import React from 'react';
-import posterImg from './elements/Main_Poster_Optimized.jpg';
+import posterImg from './elements/Main Poster.svg';
 
 const PosterCard = ({ onClose, isClosing }) => {
   return (

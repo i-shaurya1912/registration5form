@@ -51,38 +51,42 @@ const RegistrationMain = () => {
   };
 
   useEffect(() => {
-    const isMobileViewport = window.innerWidth < 1024;
-    if (!isMobileViewport) {
-      return undefined;
-    }
+    const handleLock = () => {
+      const isMobileViewport = window.innerWidth < 1024;
+      if (isMobileViewport) {
+        document.body.style.overflow = 'hidden';
+        document.body.style.height = '100dvh';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        document.documentElement.style.overflow = 'hidden';
+        document.documentElement.style.height = '100%';
+        document.documentElement.style.overscrollBehavior = 'none';
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      } else {
+        document.body.style.overflow = '';
+        document.body.style.height = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.documentElement.style.overflow = '';
+        document.documentElement.style.height = '';
+        document.documentElement.style.overscrollBehavior = '';
+      }
+    };
 
-    const previousBodyOverflow = document.body.style.overflow;
-    const previousBodyHeight = document.body.style.height;
-    const previousBodyPosition = document.body.style.position;
-    const previousBodyWidth = document.body.style.width;
-    const previousDocumentOverflow = document.documentElement.style.overflow;
-    const previousDocumentHeight = document.documentElement.style.height;
-    const previousDocumentOverscrollBehavior = document.documentElement.style.overscrollBehavior;
-
-    document.body.style.overflow = 'hidden';
-    document.body.style.height = '100dvh';
-    document.body.style.position = 'fixed';
-    document.body.style.width = '100%';
-    document.documentElement.style.overflow = 'hidden';
-    document.documentElement.style.height = '100%';
-    document.documentElement.style.overscrollBehavior = 'none';
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    handleLock();
+    window.addEventListener('resize', handleLock);
 
     return () => {
-      document.body.style.overflow = previousBodyOverflow;
-      document.body.style.height = previousBodyHeight;
-      document.body.style.position = previousBodyPosition;
-      document.body.style.width = previousBodyWidth;
-      document.documentElement.style.overflow = previousDocumentOverflow;
-      document.documentElement.style.height = previousDocumentHeight;
-      document.documentElement.style.overscrollBehavior = previousDocumentOverscrollBehavior;
+      window.removeEventListener('resize', handleLock);
+      document.body.style.overflow = '';
+      document.body.style.height = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.documentElement.style.overflow = '';
+      document.documentElement.style.height = '';
+      document.documentElement.style.overscrollBehavior = '';
     };
-  }, [mobileView]);
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -281,7 +285,7 @@ const RegistrationMain = () => {
       </div>
 
       <div className="relative z-10 w-full min-h-screen flex items-center justify-center max-lg:h-[100dvh] max-lg:max-h-[100dvh]">
-        <div className="w-full max-w-[420px] lg:max-w-[1240px] mx-auto px-4 md:px-6 py-4 lg:py-8 flex flex-col items-center justify-between h-screen max-lg:h-[100dvh] max-lg:max-h-[100dvh] overflow-hidden text-white relative z-10">
+        <div className="w-full max-w-[420px] lg:max-w-[1240px] mx-auto px-4 md:px-6 max-lg:px-3 max-lg:py-1 py-4 lg:py-8 flex flex-col items-center justify-between h-screen max-lg:h-[100dvh] max-lg:max-h-[100dvh] overflow-hidden text-white relative z-10">
           {/* Toast Alert Banner */}
           {toast.show && (
             <div className="fixed top-6 left-1/2 -translate-x-1/2 bg-indigo-900/90 border border-indigo-500/40 text-indigo-100 px-6 py-2.5 rounded-xl text-xs font-semibold tracking-wider text-center shadow-2xl z-[100] animate-bounce">

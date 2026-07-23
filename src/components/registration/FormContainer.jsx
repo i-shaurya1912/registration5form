@@ -78,7 +78,7 @@ export const FormContainer = ({
       initial={{ opacity: 0, filter: 'blur(10px)', y: 20 }}
       animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
       transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
-      className="lg:col-span-6 flex flex-col justify-between lg:justify-center items-center w-full transition-all duration-300 h-full py-6 lg:py-0 relative"
+      className="lg:col-span-6 flex flex-col justify-between lg:justify-center items-center w-full transition-all duration-300 h-full py-2 lg:py-0 relative"
     >
       {/* Reused Mobile Header (Logo & SPOCC'26) */}
       <div className="lg:hidden flex flex-col items-center mt-2 mb-2 animate-fade-in w-full relative">
@@ -135,7 +135,7 @@ export const FormContainer = ({
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="w-full max-w-[460px] lg:max-w-[520px] xl:max-w-[580px] mx-auto flex flex-col items-center justify-center relative max-lg:min-h-0 lg:min-h-[500px] lg:h-[660px] px-2 md:px-0 py-4 lg:rounded-[32px] lg:bg-[#001133]/60 lg:backdrop-blur-2xl lg:shadow-[0_15px_50px_rgba(0,0,0,0.5)] lg:px-12 lg:py-10 animate-form-flicker max-lg:overflow-y-auto max-lg:max-h-[80vh]"
+        className="w-full max-w-[460px] lg:max-w-[520px] xl:max-w-[580px] mx-auto flex flex-col items-center justify-center relative max-lg:min-h-0 lg:min-h-[500px] lg:h-[660px] px-2 md:px-0 py-2.5 lg:py-4 lg:rounded-[32px] lg:bg-[#001133]/60 lg:backdrop-blur-2xl lg:shadow-[0_15px_50px_rgba(0,0,0,0.5)] lg:px-12 lg:py-10 animate-form-flicker max-lg:overflow-y-hidden"
       >
         {/* Gradient Border Mask (Desktop Only) */}
         <div 
@@ -149,7 +149,7 @@ export const FormContainer = ({
           }}
         />
         
-        <div className="w-full relative flex-1 flex flex-col justify-start pt-4 max-lg:pt-2">
+        <div className="w-full relative flex-1 flex flex-col justify-start pt-2 max-lg:pt-0">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={step === 3 ? 'otp' : 'form'}
@@ -162,11 +162,11 @@ export const FormContainer = ({
               initial="initial"
               animate="animate"
               exit="exit"
-              className="relative w-full flex flex-col gap-4 pt-1 pb-4"
+              className="relative w-full flex flex-col gap-2 max-lg:gap-1.5 pt-1 pb-4"
             >
               {(step === 1 || step === 2) ? (
-                <div className="flex flex-col gap-4 w-full animate-fade-in">
-                  <h2 className="text-2xl font-bold text-center text-white/95 uppercase tracking-wider mb-2 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] max-lg:text-xl">Register here</h2>
+                <div className="flex flex-col gap-2.5 max-lg:gap-2 w-full animate-fade-in">
+                  <h2 className="text-2xl font-bold text-center text-white/95 uppercase tracking-wider mb-0.5 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] max-lg:text-[18px]">Register here</h2>
 
                   <FormField 
                     name="name" 
@@ -176,7 +176,7 @@ export const FormContainer = ({
                     placeholder="Enter Name"
                     error={errors.name}
                   />
-                  <div className="grid grid-cols-2 gap-4 w-full">
+                  <div className="grid grid-cols-2 gap-2.5 w-full">
                     <FormField 
                       name="studentNumber" 
                       value={formData.studentNumber} 
@@ -205,7 +205,7 @@ export const FormContainer = ({
                     error={errors.email}
                     readOnly={true}
                   />
-                  <div className="grid grid-cols-2 gap-4 w-full">
+                  <div className="grid grid-cols-2 gap-2.5 w-full">
                     <FormField 
                       name="phoneNumber" 
                       value={formData.phoneNumber} 
@@ -224,7 +224,7 @@ export const FormContainer = ({
                       error={errors.branch}
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-4 w-full">
+                  <div className="grid grid-cols-2 gap-2.5 w-full">
                     <FormField 
                       name="unstopId" 
                       value={formData.unstopId} 
@@ -244,7 +244,7 @@ export const FormContainer = ({
                     />
                   </div>
 
-                  <div className="flex justify-center my-2 w-full relative z-20 pointer-events-auto">
+                  <div className="flex justify-center my-1.5 w-full relative z-20 pointer-events-auto">
                     {import.meta.env.VITE_RECAPTCHA_SITE_KEY ? (
                       <ReCAPTCHA
                         ref={recaptchaRef}
@@ -273,7 +273,7 @@ export const FormContainer = ({
                   <button
                     type="submit"
                     disabled={isSubmitting || !turnstileToken}
-                    className="w-full mt-1 py-3.5 rounded-xl font-bold text-sm tracking-[0.25em] text-white bg-gradient-to-r from-[#00b0ff] to-[#bd22ff] border border-blue-400/25 hover:opacity-95 hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(59,130,246,0.35)] shadow-md transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer"
+                    className="w-full mt-1.5 py-3 max-lg:py-2.5 rounded-xl font-bold text-xs max-lg:text-[11px] lg:text-sm tracking-[0.25em] text-white bg-gradient-to-r from-[#00b0ff] to-[#bd22ff] border border-blue-400/25 hover:opacity-95 hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(59,130,246,0.35)] shadow-md transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer"
                   >
                     {isSubmitting ? 'SUBMITTING...' : 'SUBMIT'}
                   </button>
