@@ -109,7 +109,7 @@ export const BrandingSection = ({ showPoster, setShowPoster, handleClosePoster, 
         {/* Poster Wrapper (Visible on both Mobile and Desktop) */}
         <div className="flex relative">
           {/* Embedded Poster */}
-          <div className="relative w-[130px] md:w-[170px] lg:w-[220px] xl:w-[260px] shrink-0 rounded-xl overflow-hidden border border-white/10 drop-shadow-[0_0_20px_rgba(0,210,255,0.15)] hover:border-[#00d2ff]/50 hover:scale-[1.02] transition-all duration-500 cursor-pointer group" onClick={() => setShowPoster(true)} onTouchStart={() => setShowPoster(true)}>
+          <div className="relative w-[130px] md:w-[170px] lg:w-[220px] xl:w-[260px] shrink-0 rounded-xl overflow-hidden border border-white/10 drop-shadow-[0_0_20px_rgba(0,210,255,0.15)] hover:border-[#00d2ff]/50 hover:scale-[1.02] transition-all duration-500 cursor-pointer group" onClick={() => setShowPoster(true)}>
             <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent z-40 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity flex items-end justify-center pb-2 lg:pb-4">
               <span className="text-white text-[7.5px] lg:text-[10px] font-black tracking-[0.12em] lg:tracking-[0.2em] bg-[#001133]/90 border border-white/10 px-2 py-0.5 lg:px-3 lg:py-1.5 rounded-full backdrop-blur-md">CLICK TO ENLARGE</span>
             </div>
