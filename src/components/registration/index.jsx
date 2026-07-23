@@ -24,6 +24,7 @@ const RegistrationMain = () => {
     gender: '',
     branch: '',
     phoneNumber: '',
+    unstopId: '',
     residence: ''
   });
   const [errors, setErrors] = useState({});
@@ -142,6 +143,7 @@ const RegistrationMain = () => {
         email: formData.email,
         phoneNumber: formData.phoneNumber,
         residence: formData.residence,
+        unstopId: formData.unstopId,
         cfTurnstileResponse: captchaToken,
       };
       const data = await sendOtp(payload);
@@ -175,13 +177,13 @@ const RegistrationMain = () => {
 
   const handleCancelOtp = () => {
     setDirection(-1);
-    setStep(2);
+    setStep(1);
   };
 
   const resetForm = () => {
     setFormData({
       name: '', studentNumber: '', email: '', gender: '',
-      branch: '', phoneNumber: '', residence: ''
+      branch: '', phoneNumber: '', unstopId: '', residence: ''
     });
     setErrors({});
     setStep(1);

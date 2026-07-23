@@ -56,6 +56,10 @@ export const validateField = (name, value, formData = {}) => {
       if (!RESIDENCES.includes(v)) return 'Select residence';
       return '';
 
+    case 'unstopId':
+      if (!v) return 'Unstop ID is required';
+      return '';
+
     default:
       return '';
   }
@@ -63,7 +67,7 @@ export const validateField = (name, value, formData = {}) => {
 
 export const validateForm = (data) => {
   const errors = {};
-  const fields = ['name', 'studentNumber', 'email', 'gender', 'branch', 'phoneNumber', 'residence'];
+  const fields = ['name', 'studentNumber', 'email', 'gender', 'branch', 'phoneNumber', 'unstopId', 'residence'];
   fields.forEach((key) => {
     const err = validateField(key, data[key], data);
     if (err) errors[key] = err;

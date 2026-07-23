@@ -1,9 +1,11 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { StepOne } from './steps/StepOne';
 import { StepTwo } from './steps/StepTwo';
 import { StepThree } from './steps/StepThree';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { GENDER_OPTIONS, BRANCH_OPTIONS, RESIDENCE_OPTIONS } from './constants';
+import { FormField } from '../FormField';
 
 export const FormContainer = ({
   step,
@@ -26,6 +28,16 @@ export const FormContainer = ({
   const touchStartY = useRef(null);
   const touchEndY = useRef(null);
 
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const isTargetScrollable = (target, currentTarget) => {
     let el = target;
     while (el && el !== currentTarget) {
@@ -45,63 +57,19 @@ export const FormContainer = ({
   };
 
   const handleWheel = (e) => {
-    if (step === 3) return; // Disable scrolling on OTP step
-    if (isTargetScrollable(e.target, e.currentTarget)) return;
-    if (isInteractiveTarget(e.target)) return;
-    if (isScrolling.current || Math.abs(e.deltaY) < 5) return;
-
-    e.preventDefault();
-
-    if (e.deltaY > 5) {
-      isScrolling.current = true;
-      navigateNext();
-      setTimeout(() => { isScrolling.current = false; }, 600);
-    } else if (e.deltaY < -5) {
-      isScrolling.current = true;
-      navigatePrev();
-      setTimeout(() => { isScrolling.current = false; }, 600);
-    }
+    return; // Disable scroll-jacking steps
   };
 
   const handleTouchStart = (e) => {
-    if (step === 3) return; // Disable swiping on OTP step
-    if (isTargetScrollable(e.target, e.currentTarget) || isInteractiveTarget(e.target)) {
-      touchStartY.current = null;
-      touchEndY.current = null;
-      return;
-    }
-    touchStartY.current = e.targetTouches[0].clientY;
-    touchEndY.current = e.targetTouches[0].clientY;
+    return; // Disable swiping step transition
   };
 
   const handleTouchMove = (e) => {
-    if (step === 3 || touchStartY.current === null) return;
-    if (isInteractiveTarget(e.target)) return;
-
-    touchEndY.current = e.targetTouches[0].clientY;
-    const swipeDistance = touchStartY.current - touchEndY.current;
-    if (Math.abs(swipeDistance) > 8 && e.cancelable) {
-      e.preventDefault();
-    }
+    return; // Disable swiping step transition
   };
 
   const handleTouchEnd = () => {
-    if (step === 3 || touchStartY.current === null) return;
-    if (isScrolling.current) return;
-    const swipeDistance = touchStartY.current - touchEndY.current;
-
-    if (swipeDistance > 50) {
-      isScrolling.current = true;
-      navigateNext();
-      setTimeout(() => { isScrolling.current = false; }, 600);
-    } else if (swipeDistance < -50) {
-      isScrolling.current = true;
-      navigatePrev();
-      setTimeout(() => { isScrolling.current = false; }, 600);
-    }
-
-    touchStartY.current = null;
-    touchEndY.current = null;
+    return; // Disable swiping step transition
   };
 
   return (
@@ -166,7 +134,7 @@ export const FormContainer = ({
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="w-full max-w-[460px] lg:max-w-[520px] xl:max-w-[580px] mx-auto flex flex-col items-center justify-center relative min-h-[480px] lg:min-h-[500px] px-2 md:px-0 py-4 lg:rounded-[32px] lg:bg-[#001133]/60 lg:backdrop-blur-2xl lg:shadow-[0_15px_50px_rgba(0,0,0,0.5)] lg:px-12 lg:py-10 animate-form-flicker"
+        className="w-full max-w-[460px] lg:max-w-[520px] xl:max-w-[580px] mx-auto flex flex-col items-center justify-center relative max-lg:min-h-0 lg:min-h-[500px] px-2 md:px-0 py-4 lg:rounded-[32px] lg:bg-[#001133]/60 lg:backdrop-blur-2xl lg:shadow-[0_15px_50px_rgba(0,0,0,0.5)] lg:px-12 lg:py-10 animate-form-flicker max-lg:overflow-y-auto max-lg:max-h-[80vh]"
       >
         {/* Gradient Border Mask (Desktop Only) */}
         <div 
@@ -180,10 +148,10 @@ export const FormContainer = ({
           }}
         />
         
-        <div className="w-full relative flex-1 flex flex-col justify-start pt-4 min-h-[420px] md:min-h-[480px]">
+        <div className="w-full relative flex-1 flex flex-col justify-start pt-4 max-lg:pt-2">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
-              key={step}
+              key={step === 3 ? 'otp' : 'form'}
               custom={direction}
               variants={{
                 initial: (dir) => ({ x: dir === 1 ? "100%" : "-100%", opacity: 0, filter: 'blur(5px)' }),
@@ -193,14 +161,87 @@ export const FormContainer = ({
               initial="initial"
               animate="animate"
               exit="exit"
-              className="absolute inset-0 flex flex-col gap-5 md:gap-6 w-full justify-start pt-2 pb-12"
+              className={step === 3 ? "absolute inset-0 flex flex-col justify-center text-center px-4" : "relative w-full flex flex-col gap-4 pt-1 pb-4"}
             >
-              {step === 1 && (
-                <StepOne formData={formData} errors={errors} handleInputChange={handleInputChange} handleBlur={handleBlur} />
-              )}
-              {step === 2 && (
-                <>
-                  <StepTwo formData={formData} errors={errors} handleInputChange={handleInputChange} handleBlur={handleBlur} isSubmitting={isSubmitting} />
+              {(step === 1 || step === 2) ? (
+                <div className="flex flex-col gap-4 w-full animate-fade-in">
+                  <h2 className="text-2xl font-bold text-center text-white/95 uppercase tracking-wider mb-2 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] max-lg:text-xl">Register here</h2>
+
+                  <FormField 
+                    name="name" 
+                    value={formData.name} 
+                    onChange={handleInputChange}
+                    onBlur={handleBlur}
+                    placeholder="Enter Name"
+                    error={errors.name}
+                  />
+                  <div className="grid grid-cols-2 gap-4 w-full">
+                    <FormField 
+                      name="studentNumber" 
+                      value={formData.studentNumber} 
+                      onChange={handleInputChange}
+                      onBlur={handleBlur}
+                      placeholder="Enter Student Number"
+                      error={errors.studentNumber}
+                    />
+                    <FormField 
+                      type="select" 
+                      name="gender" 
+                      value={formData.gender} 
+                      onChange={handleInputChange}
+                      placeholder="Select Gender"
+                      options={GENDER_OPTIONS}
+                      error={errors.gender}
+                    />
+                  </div>
+                  <FormField 
+                    type="email" 
+                    name="email" 
+                    value={formData.email} 
+                    onChange={handleInputChange}
+                    onBlur={handleBlur}
+                    placeholder="Enter College Email Id"
+                    error={errors.email}
+                  />
+                  <div className="grid grid-cols-2 gap-4 w-full">
+                    <FormField 
+                      name="phoneNumber" 
+                      value={formData.phoneNumber} 
+                      onChange={handleInputChange}
+                      onBlur={handleBlur}
+                      placeholder="Enter Phone Number"
+                      error={errors.phoneNumber}
+                    />
+                    <FormField 
+                      type="select" 
+                      name="branch" 
+                      value={formData.branch} 
+                      onChange={handleInputChange} 
+                      placeholder="Branch"
+                      options={BRANCH_OPTIONS}
+                      error={errors.branch}
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 w-full">
+                    <FormField 
+                      name="unstopId" 
+                      value={formData.unstopId} 
+                      onChange={handleInputChange}
+                      onBlur={handleBlur}
+                      placeholder="Enter Unstop Id or (NaN)"
+                      error={errors.unstopId}
+                    />
+                    <FormField 
+                      type="select" 
+                      name="residence" 
+                      value={formData.residence} 
+                      onChange={handleInputChange} 
+                      placeholder="Select Residence"
+                      options={RESIDENCE_OPTIONS}
+                      error={errors.residence}
+                    />
+                  </div>
+
                   {import.meta.env.VITE_RECAPTCHA_SITE_KEY ? (
                     <ReCAPTCHA
                       ref={recaptchaRef}
@@ -209,7 +250,7 @@ export const FormContainer = ({
                     />
                   ) : (
                     <div
-                      className="cf-turnstile mx-auto mt-2"
+                      className="cf-turnstile mx-auto mt-1"
                       data-sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
                       data-callback="onTurnstileSuccess"
                       data-theme="dark"
@@ -221,22 +262,21 @@ export const FormContainer = ({
                       }}
                     />
                   )}
-                </>
-              )}
-              {step === 3 && (
+
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full mt-1 py-3.5 rounded-xl font-bold text-sm tracking-[0.25em] text-white bg-gradient-to-r from-[#00b0ff] to-[#bd22ff] border border-blue-400/25 hover:opacity-95 hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(59,130,246,0.35)] shadow-md transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer"
+                  >
+                    {isSubmitting ? 'SUBMITTING...' : 'SUBMIT'}
+                  </button>
+                </div>
+              ) : (
                 <StepThree onVerify={handleVerifyOtp} isSubmitting={isSubmitting} onCancel={handleCancelOtp} onResend={handleCancelOtp} />
               )}
             </motion.div>
           </AnimatePresence>
         </div>
-
-        {/* Pagination Dots (Only show on steps 1 and 2) */}
-        {step < 3 && (
-          <div className="absolute -bottom-2 lg:bottom-4 left-1/2 -translate-x-1/2 flex gap-3 z-30">
-            <div className={`w-12 h-1.5 rounded-full transition-colors duration-500 ${step === 1 ? 'bg-[#00d2ff] shadow-[0_0_10px_rgba(0,210,255,0.8)]' : 'bg-white/20'}`} />
-            <div className={`w-12 h-1.5 rounded-full transition-colors duration-500 ${step === 2 ? 'bg-[#00d2ff] shadow-[0_0_10px_rgba(0,210,255,0.8)]' : 'bg-white/20'}`} />
-          </div>
-        )}
       </form>
 
       {/* Reused Mobile Footer */}
