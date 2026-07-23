@@ -98,19 +98,19 @@ export const BrandingSection = ({ showPoster, setShowPoster, handleClosePoster, 
         <h1 className="text-[52px] lg:text-[80px] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-[#00d2ff] to-[#a855f7] drop-shadow-[0_0_20px_rgba(0,210,255,0.4)] mb-2 select-none leading-none">
           SPOCC&apos;26
         </h1>
-        <span className="text-[11px] lg:text-[14px] font-bold tracking-[0.4em] uppercase text-white/70 mb-6 lg:mb-8 ml-2 text-center lg:text-left w-full lg:w-auto">
+        <span className="text-[11px] lg:text-[14px] font-bold tracking-[0.4em] uppercase text-white/70 mb-3 lg:mb-8 ml-2 text-center lg:text-left w-full lg:w-auto">
           THE RECRUITMENT DRIVE
         </span>
       </div>
 
       {/* 2. MIDDLE SECTION (Poster Button & Desktop Details) */}
-      <div className="flex flex-col lg:flex-row items-center lg:items-start w-full gap-8 relative z-10 mt-4">
+      <div className="flex flex-col lg:flex-row items-center lg:items-start w-full gap-4 lg:gap-8 relative z-10 mt-4">
 
         {/* Poster Wrapper (Visible on both Mobile and Desktop) */}
         <div className="flex relative">
           {/* Embedded Poster */}
           <div className="relative w-[130px] md:w-[170px] lg:w-[220px] xl:w-[260px] shrink-0 rounded-xl overflow-hidden border border-white/10 drop-shadow-[0_0_20px_rgba(0,210,255,0.15)] hover:border-[#00d2ff]/50 hover:scale-[1.02] transition-all duration-500 cursor-pointer group" onClick={() => setShowPoster(true)}>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-3 lg:pb-4">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-40 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity flex items-end justify-center pb-3 lg:pb-4">
               <span className="text-white text-[9px] lg:text-[10px] font-bold tracking-[0.2em] bg-black/50 px-2.5 py-1 lg:px-3 lg:py-1.5 rounded-full backdrop-blur-md">CLICK TO ENLARGE</span>
             </div>
             <img src={posterImg} alt="SPOCC'26 Poster" className="w-full h-auto object-cover opacity-90 group-hover:opacity-100 transition-opacity relative z-10" />
