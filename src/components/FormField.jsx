@@ -170,7 +170,7 @@ const FormField = ({
 
       {/* Field Level Error Message */}
       {error && (
-        <div className="absolute -bottom-4.5 left-2 text-[10px] text-[#ff0055] font-semibold animate-fade-in pointer-events-none">
+        <div className="text-[10px] text-[#ff0055] font-semibold mt-1 ml-2 animate-fade-in pointer-events-none">
           {error}
         </div>
       )}

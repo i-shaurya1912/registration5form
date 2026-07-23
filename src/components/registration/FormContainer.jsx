@@ -135,7 +135,7 @@ export const FormContainer = ({
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="w-full max-w-[460px] lg:max-w-[520px] xl:max-w-[580px] mx-auto flex flex-col items-center justify-center relative max-lg:min-h-0 lg:min-h-[500px] lg:h-[660px] px-5 py-5 max-lg:rounded-2xl lg:rounded-[32px] max-lg:bg-[#001133]/45 lg:bg-[#001133]/60 max-lg:backdrop-blur-xl lg:backdrop-blur-2xl max-lg:border max-lg:border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.4)] lg:shadow-[0_15px_50px_rgba(0,0,0,0.5)] lg:px-12 lg:py-10 animate-form-flicker max-lg:overflow-y-hidden"
+        className="w-full max-w-[460px] lg:max-w-[520px] xl:max-w-[580px] mx-auto flex flex-col items-center justify-center relative max-lg:min-h-0 lg:min-h-[500px] lg:h-[660px] px-4 py-4 max-sm:px-3 max-sm:py-3 max-lg:rounded-2xl lg:rounded-[32px] max-lg:bg-[#001133]/55 lg:bg-[#001133]/60 max-lg:backdrop-blur-xl lg:backdrop-blur-2xl max-lg:border max-lg:border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.4)] lg:shadow-[0_15px_50px_rgba(0,0,0,0.5)] lg:px-12 lg:py-10 animate-form-flicker max-lg:overflow-y-auto max-lg:max-h-[66dvh]"
       >
         {/* Gradient Border Mask (Desktop Only) */}
         <div 
