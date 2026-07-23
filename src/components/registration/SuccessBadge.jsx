@@ -19,48 +19,52 @@ export const SuccessBadge = ({ formData, registrationData = {}, resetForm }) => 
         </div>
       </div>
 
-      <h3 className="text-2xl md:text-3xl font-black tracking-widest mb-2 text-[#00d2ff] drop-shadow-[0_0_15px_rgba(0,210,255,0.5)]">
+      <h3 className="text-2xl md:text-3xl font-black tracking-widest mb-2 bg-gradient-to-r from-[#ffffff] via-[#00d2ff] to-[#a855f7] bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(0,210,255,0.5)]">
         VERIFIED
       </h3>
-      <p className="text-xs md:text-sm text-blue-200/60 font-semibold tracking-widest uppercase mb-10">
+      <p className="text-xs md:text-sm text-blue-200/80 font-semibold tracking-widest uppercase mb-10">
         Access Badge Generated
       </p>
       
       {/* Digital Ticket / ID Card */}
-      <div className="w-full bg-transparent border-2 border-[#00d2ff]/80 shadow-[0_0_30px_rgba(0,210,255,0.2),inset_0_0_20px_rgba(0,210,255,0.1)] rounded-2xl p-6 text-left mb-10 relative overflow-hidden group hover:border-[#00d2ff] hover:shadow-[0_0_40px_rgba(0,210,255,0.4),inset_0_0_25px_rgba(0,210,255,0.2)] transition-all duration-500">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-[#00d2ff]/10 rounded-full blur-3xl -z-1 transition-all duration-700 group-hover:bg-[#00d2ff]/20" />
-        
-        <div className="text-[10px] text-[#00d2ff]/70 tracking-[0.3em] font-bold uppercase mb-1">REGISTRATION ID</div>
-        <div className="text-xl md:text-2xl font-black tracking-widest text-white drop-shadow-md mb-6 select-all">
-          {registrationData.id || formData.studentNumber}
-        </div>
-        
-        <div className="grid grid-cols-2 gap-y-6 gap-x-4 text-sm">
-          <div>
-            <span className="block text-[9px] text-[#00d2ff]/70 tracking-[0.2em] uppercase font-bold mb-1">NAME</span>
-            <span className="font-bold text-white tracking-wider truncate block">{formData.name}</span>
+      <div className="w-full p-[2px] rounded-2xl bg-gradient-to-br from-[#ffffff] via-[#00d2ff] to-[#a855f7] shadow-[0_0_30px_rgba(0,210,255,0.35)] mb-8">
+        <div className="w-full bg-[#001133]/80 backdrop-blur-xl rounded-[14px] p-6 text-left relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#00d2ff]/10 rounded-full blur-3xl -z-1 transition-all duration-700 group-hover:bg-[#00d2ff]/20" />
+          
+          <div className="text-[10px] bg-gradient-to-r from-[#00d2ff] via-[#a855f7] to-[#ffffff] bg-clip-text text-transparent tracking-[0.3em] font-extrabold uppercase mb-1">REGISTRATION ID</div>
+          <div className="text-xl md:text-2xl font-black tracking-widest bg-gradient-to-r from-[#ffffff] via-[#00d2ff] to-[#ffffff] bg-clip-text text-transparent drop-shadow-md mb-6 select-all">
+            {registrationData.id || formData.studentNumber}
           </div>
-          <div>
-            <span className="block text-[9px] text-[#00d2ff]/70 tracking-[0.2em] uppercase font-bold mb-1">STUDENT NO</span>
-            <span className="font-bold text-white tracking-wider">{formData.studentNumber}</span>
-          </div>
-          <div>
-            <span className="block text-[9px] text-[#00d2ff]/70 tracking-[0.2em] uppercase font-bold mb-1">BRANCH</span>
-            <span className="font-bold text-white tracking-wider">{formData.branch}</span>
-          </div>
-          <div>
-            <span className="block text-[9px] text-[#00d2ff]/70 tracking-[0.2em] uppercase font-bold mb-1">RESIDENCE</span>
-            <span className="font-bold text-white tracking-wider">{formData.residence}</span>
+          
+          <div className="grid grid-cols-2 gap-y-6 gap-x-4 text-sm">
+            <div>
+              <span className="block text-[9px] bg-gradient-to-r from-[#00d2ff] to-[#a855f7] bg-clip-text text-transparent tracking-[0.2em] uppercase font-extrabold mb-1">NAME</span>
+              <span className="font-bold text-white tracking-wider truncate block">{formData.name}</span>
+            </div>
+            <div>
+              <span className="block text-[9px] bg-gradient-to-r from-[#00d2ff] to-[#a855f7] bg-clip-text text-transparent tracking-[0.2em] uppercase font-extrabold mb-1">STUDENT NO</span>
+              <span className="font-bold text-white tracking-wider">{formData.studentNumber}</span>
+            </div>
+            <div>
+              <span className="block text-[9px] bg-gradient-to-r from-[#00d2ff] to-[#a855f7] bg-clip-text text-transparent tracking-[0.2em] uppercase font-extrabold mb-1">BRANCH</span>
+              <span className="font-bold text-white tracking-wider">{formData.branch}</span>
+            </div>
+            <div>
+              <span className="block text-[9px] bg-gradient-to-r from-[#00d2ff] to-[#a855f7] bg-clip-text text-transparent tracking-[0.2em] uppercase font-extrabold mb-1">RESIDENCE</span>
+              <span className="font-bold text-white tracking-wider">{formData.residence}</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <button 
-        onClick={resetForm}
-        className="w-full py-4 rounded-xl font-black text-xs md:text-sm tracking-[0.25em] text-[#00d2ff] bg-transparent border-2 border-[#00d2ff] hover:bg-[#00d2ff] hover:text-[#020617] hover:shadow-[0_0_30px_rgba(0,210,255,0.6)] shadow-[0_0_15px_rgba(0,210,255,0.2)] transition-all duration-300 active:scale-95 select-none cursor-pointer"
-      >
-        REGISTER ANOTHER
-      </button>
+      <div className="w-full p-[2px] rounded-xl bg-gradient-to-r from-[#00b0ff] via-[#bd22ff] to-[#00b0ff] shadow-[0_0_20px_rgba(0,210,255,0.3)] hover:shadow-[0_0_35px_rgba(0,210,255,0.6)] transition-all duration-300">
+        <button 
+          onClick={resetForm}
+          className="w-full py-4 rounded-[10px] font-black text-xs md:text-sm tracking-[0.25em] text-white bg-[#001133]/90 hover:bg-transparent transition-all duration-300 active:scale-95 select-none cursor-pointer"
+        >
+          REGISTER ANOTHER
+        </button>
+      </div>
     </motion.div>
   );
 };

@@ -5,6 +5,7 @@ const RESEND_COOLDOWN = 60;
 export const StepThree = ({ onVerify, isSubmitting, onCancel, onResend }) => {
   const [otp, setOtp] = useState('');
   const [cooldown, setCooldown] = useState(0);
+  const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
     if (cooldown <= 0) return;
@@ -19,20 +20,36 @@ export const StepThree = ({ onVerify, isSubmitting, onCancel, onResend }) => {
   };
 
   return (
-    <div className="w-full flex flex-col gap-6 relative text-center my-auto px-4">
-      <h3 className="text-xl font-bold text-white tracking-wider">ENTER OTP</h3>
-      <p className="text-xs text-[#5b6e9c] -mt-3">A 6-digit OTP has been sent to your college email</p>
+    <div className="w-full flex flex-col gap-5 relative text-center py-4 px-2 md:px-4 animate-fade-in">
+      <h3 className="text-xl md:text-2xl font-extrabold text-white tracking-widest uppercase drop-shadow-[0_0_12px_rgba(255,255,255,0.3)]">ENTER OTP</h3>
+      <p className="text-xs md:text-sm text-blue-200/90 -mt-2">A 6-digit OTP has been sent to your college email</p>
 
-      <input
-        type="text"
-        value={otp}
-        onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-        className="w-full bg-transparent text-white text-center py-4 rounded-xl border border-white/20 focus:border-[#00d2ff] focus:shadow-[0_0_20px_rgba(0,210,255,0.3)] focus:outline-none transition-all tracking-[0.5em] text-2xl font-bold"
-        placeholder="------"
-        maxLength={6}
-        inputMode="numeric"
-        autoComplete="one-time-code"
-      />
+      <div className={`w-full p-[2px] rounded-xl transition-all duration-300 bg-gradient-to-r from-[#ffffff] via-[#00d2ff] to-[#a855f7] my-1 ${
+        isFocused
+          ? 'shadow-[0_0_35px_rgba(0,210,255,0.7)]'
+          : 'shadow-[0_0_20px_rgba(0,210,255,0.3)] hover:shadow-[0_0_30px_rgba(0,210,255,0.5)]'
+      }`}>
+        <input
+          type="text"
+          value={otp}
+          onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          className="w-full bg-[#030914] text-white text-center py-4 rounded-[10px] outline-none tracking-[0.5em] text-2xl md:text-3xl font-black"
+          placeholder="------"
+          maxLength={6}
+          inputMode="numeric"
+          autoComplete="one-time-code"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              if (otp.length === 6 && !isSubmitting) {
+                onVerify(otp);
+              }
+            }
+          }}
+        />
+      </div>
 
       <div className="flex gap-4 mt-2">
         <button

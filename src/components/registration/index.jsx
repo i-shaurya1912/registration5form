@@ -86,10 +86,36 @@ const RegistrationMain = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    const updatedData = { ...formData, [name]: value };
-    const err = validateField(name, value, updatedData);
-    setErrors((prev) => ({ ...prev, [name]: err }));
+    setFormData((prev) => {
+      const updatedData = { ...prev, [name]: value };
+
+      if (name === 'name' || name === 'studentNumber') {
+        const nameVal = name === 'name' ? value : prev.name;
+        const stdVal = name === 'studentNumber' ? value : prev.studentNumber;
+        const nameParts = nameVal.trim().split(/\s+/);
+        const firstName = (nameParts[0] || '').toLowerCase().replace(/[^a-z]/g, '');
+        const stdNo = stdVal.trim();
+
+        if (firstName && stdNo) {
+          updatedData.email = `${firstName}${stdNo}@akgec.ac.in`;
+        }
+      }
+
+      const fieldErr = validateField(name, value, updatedData);
+      const emailErr = (name === 'name' || name === 'studentNumber') && updatedData.email
+        ? validateField('email', updatedData.email, updatedData)
+        : null;
+
+      setErrors((prevErr) => {
+        const nextErr = { ...prevErr, [name]: fieldErr };
+        if (emailErr !== null) {
+          nextErr.email = emailErr;
+        }
+        return nextErr;
+      });
+
+      return updatedData;
+    });
   };
 
   const handleBlur = (e) => {
@@ -114,6 +140,9 @@ const RegistrationMain = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (step === 3) return;
+
     const validationErrors = validateForm(formData);
 
     if (Object.keys(validationErrors).length > 0) {
@@ -129,9 +158,20 @@ const RegistrationMain = () => {
 
     setIsSubmitting(true);
     try {
-      let captchaToken = turnstileToken || 'dev-bypass';
-      if (recaptchaRef.current) {
-        captchaToken = await recaptchaRef.current.executeAsync();
+      let captchaToken = turnstileToken;
+      
+      if (!captchaToken && recaptchaRef.current) {
+        captchaToken = recaptchaRef.current.getValue();
+      }
+
+      if (!captchaToken && import.meta.env.VITE_RECAPTCHA_SITE_KEY) {
+        showToast('Please check the "I\'m not a robot" captcha box before submitting.');
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (!captchaToken) {
+        captchaToken = 'dev-bypass';
       }
 
       const payload = {
@@ -144,6 +184,9 @@ const RegistrationMain = () => {
         residence: formData.residence,
         unstopId: formData.unstopId,
         cfTurnstileResponse: captchaToken,
+        gRecaptchaResponse: captchaToken,
+        recaptchaToken: captchaToken,
+        captchaToken: captchaToken,
       };
       const data = await sendOtp(payload);
       setSessionToken(data.sessionToken);
@@ -151,6 +194,9 @@ const RegistrationMain = () => {
       setDirection(1);
       setStep(3);
     } catch (err) {
+      if (recaptchaRef.current && typeof recaptchaRef.current.reset === 'function') {
+        recaptchaRef.current.reset();
+      }
       if (err.errors) {
         setErrors(err.errors);
       }
@@ -281,6 +327,7 @@ const RegistrationMain = () => {
                     formData={formData}
                     errors={errors}
                     isSubmitting={isSubmitting}
+                    turnstileToken={turnstileToken}
                     handleInputChange={handleInputChange}
                     handleBlur={handleBlur}
                     handleSubmit={handleSubmit}

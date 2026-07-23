@@ -10,6 +10,7 @@ const FormField = ({
   onBlur,
   error,
   options = [],
+  readOnly = false,
 }) => {
   const isSelect = type === 'select';
   const [isOpen, setIsOpen] = useState(false);
@@ -154,13 +155,14 @@ const FormField = ({
             name={name}
             value={value}
             onChange={onChange}
+            readOnly={readOnly}
             onFocus={() => setIsFocused(true)}
             onBlur={(e) => {
               setIsFocused(false);
               if (onBlur) onBlur(e);
             }}
             placeholder={placeholder}
-            className={baseInputStyles}
+            className={`${baseInputStyles} ${readOnly ? 'opacity-70 cursor-not-allowed' : ''}`}
           />
           {!error && <GradientBorder isActive={isFocused} />}
         </div>

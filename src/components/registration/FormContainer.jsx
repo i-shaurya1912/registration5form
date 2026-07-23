@@ -13,6 +13,7 @@ export const FormContainer = ({
   formData,
   errors,
   isSubmitting,
+  turnstileToken,
   handleInputChange,
   handleBlur,
   handleSubmit,
@@ -161,7 +162,7 @@ export const FormContainer = ({
               initial="initial"
               animate="animate"
               exit="exit"
-              className={step === 3 ? "absolute inset-0 flex flex-col justify-center text-center px-4" : "relative w-full flex flex-col gap-4 pt-1 pb-4"}
+              className="relative w-full flex flex-col gap-4 pt-1 pb-4"
             >
               {(step === 1 || step === 2) ? (
                 <div className="flex flex-col gap-4 w-full animate-fade-in">
@@ -202,6 +203,7 @@ export const FormContainer = ({
                     onBlur={handleBlur}
                     placeholder="Enter College Email Id"
                     error={errors.email}
+                    readOnly={true}
                   />
                   <div className="grid grid-cols-2 gap-4 w-full">
                     <FormField 
@@ -242,30 +244,35 @@ export const FormContainer = ({
                     />
                   </div>
 
-                  {import.meta.env.VITE_RECAPTCHA_SITE_KEY ? (
-                    <ReCAPTCHA
-                      ref={recaptchaRef}
-                      size="invisible"
-                      sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                    />
-                  ) : (
-                    <div
-                      className="cf-turnstile mx-auto mt-1"
-                      data-sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
-                      data-callback="onTurnstileSuccess"
-                      data-theme="dark"
-                      data-size="flexible"
-                      ref={(el) => {
-                        if (el && onTurnstileSuccess) {
-                          window.onTurnstileSuccess = onTurnstileSuccess;
-                        }
-                      }}
-                    />
-                  )}
+                  <div className="flex justify-center my-2 w-full relative z-20 pointer-events-auto">
+                    {import.meta.env.VITE_RECAPTCHA_SITE_KEY ? (
+                      <ReCAPTCHA
+                        ref={recaptchaRef}
+                        size="normal"
+                        sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                        onChange={(token) => onTurnstileSuccess && onTurnstileSuccess(token)}
+                        onExpired={() => onTurnstileSuccess && onTurnstileSuccess('')}
+                        theme="dark"
+                      />
+                    ) : (
+                      <div
+                        className="cf-turnstile mx-auto mt-1"
+                        data-sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                        data-callback="onTurnstileSuccess"
+                        data-theme="dark"
+                        data-size="flexible"
+                        ref={(el) => {
+                          if (el && onTurnstileSuccess) {
+                            window.onTurnstileSuccess = onTurnstileSuccess;
+                          }
+                        }}
+                      />
+                    )}
+                  </div>
 
                   <button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || !turnstileToken}
                     className="w-full mt-1 py-3.5 rounded-xl font-bold text-sm tracking-[0.25em] text-white bg-gradient-to-r from-[#00b0ff] to-[#bd22ff] border border-blue-400/25 hover:opacity-95 hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(59,130,246,0.35)] shadow-md transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer"
                   >
                     {isSubmitting ? 'SUBMITTING...' : 'SUBMIT'}
