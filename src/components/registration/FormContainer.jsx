@@ -135,7 +135,7 @@ export const FormContainer = ({
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="w-full max-w-[460px] lg:max-w-[520px] xl:max-w-[580px] mx-auto flex flex-col items-center justify-center relative max-lg:min-h-0 lg:min-h-[500px] lg:h-[660px] px-4 py-4 max-sm:px-3 max-sm:py-3 max-lg:rounded-2xl lg:rounded-[32px] max-lg:bg-[#001133]/55 lg:bg-[#001133]/60 max-lg:backdrop-blur-xl lg:backdrop-blur-2xl max-lg:border max-lg:border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.4)] lg:shadow-[0_15px_50px_rgba(0,0,0,0.5)] lg:px-12 lg:py-10 animate-form-flicker max-lg:overflow-y-auto max-lg:max-h-[66dvh]"
+        className="w-full max-w-[460px] lg:max-w-[520px] xl:max-w-[580px] mx-auto flex flex-col items-center justify-center relative max-lg:min-h-0 lg:min-h-[500px] lg:h-[660px] px-4 py-4 max-sm:px-3 max-sm:py-3.5 max-lg:rounded-2xl lg:rounded-[32px] max-lg:bg-[#001133]/55 lg:bg-[#001133]/60 max-lg:backdrop-blur-xl lg:backdrop-blur-2xl max-lg:border max-lg:border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.4)] lg:shadow-[0_15px_50px_rgba(0,0,0,0.5)] lg:px-12 lg:py-10 animate-form-flicker max-lg:overflow-hidden"
       >
         {/* Gradient Border Mask (Desktop Only) */}
         <div 
@@ -168,106 +168,108 @@ export const FormContainer = ({
                 <div className="flex flex-col gap-2.5 max-lg:gap-2 w-full animate-fade-in">
                   <h2 className="text-2xl font-bold text-center text-white/95 uppercase tracking-wider mb-0.5 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] max-lg:text-[18px]">Register here</h2>
 
-                  <FormField 
-                    name="name" 
-                    value={formData.name} 
-                    onChange={handleInputChange}
-                    onBlur={handleBlur}
-                    placeholder="Enter Name"
-                    error={errors.name}
-                  />
-                  <div className="grid grid-cols-2 gap-2.5 w-full">
+                  <div className="w-full flex flex-col gap-2.5 max-lg:gap-1.5 pt-0.5">
                     <FormField 
-                      name="studentNumber" 
-                      value={formData.studentNumber} 
+                      name="name" 
+                      value={formData.name} 
                       onChange={handleInputChange}
                       onBlur={handleBlur}
-                      placeholder="Enter Student Number"
-                      error={errors.studentNumber}
+                      placeholder="Enter Name"
+                      error={errors.name}
                     />
+                    <div className="grid grid-cols-2 gap-2.5 w-full">
+                      <FormField 
+                        name="studentNumber" 
+                        value={formData.studentNumber} 
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        placeholder="Enter Student Number"
+                        error={errors.studentNumber}
+                      />
+                      <FormField 
+                        type="select" 
+                        name="gender" 
+                        value={formData.gender} 
+                        onChange={handleInputChange}
+                        placeholder="Select Gender"
+                        options={GENDER_OPTIONS}
+                        error={errors.gender}
+                      />
+                    </div>
                     <FormField 
-                      type="select" 
-                      name="gender" 
-                      value={formData.gender} 
-                      onChange={handleInputChange}
-                      placeholder="Select Gender"
-                      options={GENDER_OPTIONS}
-                      error={errors.gender}
-                    />
-                  </div>
-                  <FormField 
-                    type="email" 
-                    name="email" 
-                    value={formData.email} 
-                    onChange={handleInputChange}
-                    onBlur={handleBlur}
-                    placeholder="Enter College Email Id"
-                    error={errors.email}
-                    readOnly={true}
-                  />
-                  <div className="grid grid-cols-2 gap-2.5 w-full">
-                    <FormField 
-                      name="phoneNumber" 
-                      value={formData.phoneNumber} 
-                      onChange={handleInputChange}
-                      onBlur={handleBlur}
-                      placeholder="Enter Phone Number"
-                      error={errors.phoneNumber}
-                    />
-                    <FormField 
-                      type="select" 
-                      name="branch" 
-                      value={formData.branch} 
-                      onChange={handleInputChange} 
-                      placeholder="Branch"
-                      options={BRANCH_OPTIONS}
-                      error={errors.branch}
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-2.5 w-full">
-                    <FormField 
-                      name="unstopId" 
-                      value={formData.unstopId} 
+                      type="email" 
+                      name="email" 
+                      value={formData.email} 
                       onChange={handleInputChange}
                       onBlur={handleBlur}
-                      placeholder="Enter Unstop Id or (NaN)"
-                      error={errors.unstopId}
+                      placeholder="Enter College Email Id"
+                      error={errors.email}
+                      readOnly={true}
                     />
-                    <FormField 
-                      type="select" 
-                      name="residence" 
-                      value={formData.residence} 
-                      onChange={handleInputChange} 
-                      placeholder="Select Residence"
-                      options={RESIDENCE_OPTIONS}
-                      error={errors.residence}
-                    />
-                  </div>
+                    <div className="grid grid-cols-2 gap-2.5 w-full">
+                      <FormField 
+                        name="phoneNumber" 
+                        value={formData.phoneNumber} 
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        placeholder="Enter Phone Number"
+                        error={errors.phoneNumber}
+                      />
+                      <FormField 
+                        type="select" 
+                        name="branch" 
+                        value={formData.branch} 
+                        onChange={handleInputChange} 
+                        placeholder="Branch"
+                        options={BRANCH_OPTIONS}
+                        error={errors.branch}
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2.5 w-full">
+                      <FormField 
+                        name="unstopId" 
+                        value={formData.unstopId} 
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        placeholder="Enter Unstop Id or (NaN)"
+                        error={errors.unstopId}
+                      />
+                      <FormField 
+                        type="select" 
+                        name="residence" 
+                        value={formData.residence} 
+                        onChange={handleInputChange} 
+                        placeholder="Select Residence"
+                        options={RESIDENCE_OPTIONS}
+                        error={errors.residence}
+                      />
+                    </div>
 
-                  <div className="flex justify-center my-1.5 w-full relative z-20 pointer-events-auto">
-                    {import.meta.env.VITE_RECAPTCHA_SITE_KEY ? (
-                      <ReCAPTCHA
-                        ref={recaptchaRef}
-                        size="normal"
-                        sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                        onChange={(token) => onTurnstileSuccess && onTurnstileSuccess(token)}
-                        onExpired={() => onTurnstileSuccess && onTurnstileSuccess('')}
-                        theme="dark"
-                      />
-                    ) : (
-                      <div
-                        className="cf-turnstile mx-auto mt-1"
-                        data-sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
-                        data-callback="onTurnstileSuccess"
-                        data-theme="dark"
-                        data-size="flexible"
-                        ref={(el) => {
-                          if (el && onTurnstileSuccess) {
-                            window.onTurnstileSuccess = onTurnstileSuccess;
-                          }
-                        }}
-                      />
-                    )}
+                    <div className="flex justify-center my-1.5 w-full relative z-20 pointer-events-auto">
+                      {import.meta.env.VITE_RECAPTCHA_SITE_KEY ? (
+                        <ReCAPTCHA
+                          ref={recaptchaRef}
+                          size="normal"
+                          sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                          onChange={(token) => onTurnstileSuccess && onTurnstileSuccess(token)}
+                          onExpired={() => onTurnstileSuccess && onTurnstileSuccess('')}
+                          theme="dark"
+                        />
+                      ) : (
+                        <div
+                          className="cf-turnstile mx-auto mt-1"
+                          data-sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                          data-callback="onTurnstileSuccess"
+                          data-theme="dark"
+                          data-size="flexible"
+                          ref={(el) => {
+                            if (el && onTurnstileSuccess) {
+                              window.onTurnstileSuccess = onTurnstileSuccess;
+                            }
+                          }}
+                        />
+                      )}
+                    </div>
                   </div>
 
                   <button

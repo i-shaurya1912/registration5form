@@ -77,28 +77,28 @@ export const BrandingSection = ({ showPoster, setShowPoster, handleClosePoster, 
       <div className="flex flex-col items-center lg:items-start w-full mt-4 lg:mt-0 relative z-10">
         <div className="hidden lg:block absolute -left-[40px] top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-[#00d2ff]/50 to-transparent"></div>
 
-        <div className="flex items-center gap-3 mb-4 hover:scale-102 transition-transform duration-300 bg-white/5 pr-4 pl-2 py-1.5 rounded-full border border-white/10 backdrop-blur-md">
+        <div className="flex items-center gap-2 mb-2 lg:mb-4 hover:scale-102 transition-transform duration-300 bg-white/5 pr-3 pl-2 py-1 rounded-full border border-white/10 backdrop-blur-md max-lg:scale-95">
           <motion.img
             src="/cccLogo.png"
             alt="CCC Logo"
-            className="w-[28px] h-[28px] object-contain drop-shadow-[0_0_8px_rgba(0,210,255,0.5)]"
+            className="w-[24px] h-[24px] lg:w-[28px] lg:h-[28px] object-contain drop-shadow-[0_0_8px_rgba(0,210,255,0.5)]"
             animate={{ rotate: 360 }}
             transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
           />
-          <span className="text-[12px] font-black uppercase tracking-[0.3em] text-white/90">
+          <span className="text-[11px] lg:text-[12px] font-black uppercase tracking-[0.3em] text-white/90">
             CLOUD COMPUTING CELL
           </span>
         </div>
 
-        <span className="text-[12px] text-[#00d2ff] font-medium tracking-[0.4em] uppercase mb-4 ml-2 opacity-80">
+        <span className="text-[11px] lg:text-[12px] text-[#00d2ff] font-medium tracking-[0.4em] uppercase mb-2 lg:mb-4 ml-2 opacity-80">
           presents
         </span>
 
         {/* Glow SPOCC'26 headings */}
-        <h1 className="text-[52px] lg:text-[80px] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-[#00d2ff] to-[#a855f7] drop-shadow-[0_0_20px_rgba(0,210,255,0.4)] mb-2 select-none leading-none">
+        <h1 className="text-[44px] lg:text-[80px] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-[#00d2ff] to-[#a855f7] drop-shadow-[0_0_20px_rgba(0,210,255,0.4)] mb-1 lg:mb-2 select-none leading-none">
           SPOCC&apos;26
         </h1>
-        <span className="text-[11px] lg:text-[14px] font-bold tracking-[0.4em] uppercase text-white/70 mb-3 lg:mb-8 ml-2 text-center lg:text-left w-full lg:w-auto">
+        <span className="text-[10px] lg:text-[14px] font-bold tracking-[0.4em] uppercase text-white/70 mb-2 lg:mb-8 ml-2 text-center lg:text-left w-full lg:w-auto">
           THE RECRUITMENT DRIVE
         </span>
       </div>
@@ -109,7 +109,7 @@ export const BrandingSection = ({ showPoster, setShowPoster, handleClosePoster, 
         {/* Poster Wrapper (Visible on both Mobile and Desktop) */}
         <div className="flex relative">
           {/* Embedded Poster */}
-          <div className="relative w-[130px] md:w-[170px] lg:w-[220px] xl:w-[260px] shrink-0 rounded-xl overflow-hidden border border-white/10 drop-shadow-[0_0_20px_rgba(0,210,255,0.15)] hover:border-[#00d2ff]/50 hover:scale-[1.02] transition-all duration-500 cursor-pointer group" onClick={() => setShowPoster(true)}>
+          <div className="relative w-[130px] md:w-[170px] lg:w-[220px] xl:w-[260px] shrink-0 rounded-xl overflow-hidden border border-white/10 drop-shadow-[0_0_20px_rgba(0,210,255,0.15)] hover:border-[#00d2ff]/50 hover:scale-[1.02] transition-all duration-500 cursor-pointer group" onClick={() => setShowPoster(true)} onTouchStart={() => setShowPoster(true)}>
             <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent z-40 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity flex items-end justify-center pb-2 lg:pb-4">
               <span className="text-white text-[7.5px] lg:text-[10px] font-black tracking-[0.12em] lg:tracking-[0.2em] bg-[#001133]/90 border border-white/10 px-2 py-0.5 lg:px-3 lg:py-1.5 rounded-full backdrop-blur-md">CLICK TO ENLARGE</span>
             </div>

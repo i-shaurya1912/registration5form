@@ -34,8 +34,8 @@ const FormField = ({
   };
 
   const baseInputStyles = `
-    w-full px-4 py-3 md:px-5 md:py-4 lg:py-5 bg-transparent rounded-xl text-white font-bold placeholder-[#5b6e9c]
-    transition-all duration-300 outline-none text-[12px] md:text-[15px] lg:text-[16px] tracking-wide relative z-10
+    w-full px-3.5 py-2.5 max-lg:py-2 md:px-5 md:py-4 lg:py-5 bg-transparent rounded-xl text-white font-bold placeholder-[#5b6e9c]
+    transition-all duration-300 outline-none text-[11px] md:text-[15px] lg:text-[16px] tracking-wide relative z-10
     ${error 
       ? 'border-2 border-[#ff0055] shadow-[0_0_30px_rgba(255,0,85,0.6),inset_0_0_20px_rgba(255,0,85,0.2)] animate-shake' 
       : 'border-2 border-transparent ' + (isOpen || isFocused 

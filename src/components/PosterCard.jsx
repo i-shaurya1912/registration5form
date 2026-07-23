@@ -10,6 +10,7 @@ const PosterCard = ({ onClose, isClosing }) => {
           : 'animate-scale-up'
       } lg:w-full lg:max-w-[520px] xl:max-w-[580px] lg:h-[660px] lg:rounded-[32px] lg:bg-[#001133]/60 lg:backdrop-blur-2xl lg:shadow-[0_15px_50px_rgba(0,0,0,0.5)] lg:px-12 lg:py-10 lg:animate-form-flicker flex items-center justify-center max-h-[90vh] h-full max-w-full mx-auto`}
       onClick={onClose}
+      onTouchStart={onClose}
     >
       <style>{`
         @keyframes form-flicker {
