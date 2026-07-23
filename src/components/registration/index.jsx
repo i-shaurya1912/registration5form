@@ -285,7 +285,7 @@ const RegistrationMain = () => {
       </div>
 
       <div className="relative z-10 w-full min-h-screen flex items-center justify-center max-lg:h-[100dvh] max-lg:max-h-[100dvh]">
-        <div className="w-full max-w-[420px] lg:max-w-[1240px] mx-auto px-4 md:px-6 max-lg:px-3 max-lg:py-2 py-4 lg:py-8 flex flex-col items-center justify-between h-screen max-lg:h-[100dvh] max-lg:max-h-[100dvh] overflow-hidden text-white relative z-10">
+        <div className="w-full max-w-[420px] lg:max-w-[1200px] xl:max-w-[1320px] mx-auto px-6 md:px-8 lg:px-12 max-lg:px-3 max-lg:py-2 py-4 lg:py-0 flex flex-col items-center justify-center max-lg:h-[100dvh] max-lg:max-h-[100dvh] lg:h-screen overflow-hidden text-white relative z-10">
           {/* Toast Alert Banner */}
           {toast.show && (
             <div className="fixed top-6 left-1/2 -translate-x-1/2 bg-indigo-900/90 border border-indigo-500/40 text-indigo-100 px-6 py-2.5 rounded-xl text-xs font-semibold tracking-wider text-center shadow-2xl z-[100] animate-bounce">
@@ -293,7 +293,7 @@ const RegistrationMain = () => {
             </div>
           )}
 
-          <div className="w-full h-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center justify-center transition-all duration-300">
+          <div className="w-full h-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 xl:gap-16 items-center justify-center transition-all duration-300">
             
             {/* Left Column: Branding (Always present on desktop, conditionally present on mobile) */}
             <div className={`lg:col-span-6 w-full h-full flex flex-col justify-center ${mobileView === 'branding' && !isRegistered ? 'flex' : 'hidden lg:flex'}`}>

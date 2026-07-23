@@ -99,12 +99,7 @@ export const FormContainer = ({
         </span>
       </div>
 
-      {/* Desktop-only Logo above form */}
-      <div className="hidden lg:flex w-full justify-center mb-4 mt-8 animate-fade-in">
-        <span className="text-[14px] font-black uppercase tracking-[0.4em] text-white/90">
-          CLOUD COMPUTING CELL
-        </span>
-      </div>
+
 
       <style>{`
         @keyframes form-flicker {
@@ -135,7 +130,7 @@ export const FormContainer = ({
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="w-full max-w-[460px] lg:max-w-[520px] xl:max-w-[580px] mx-auto flex flex-col items-center justify-center relative max-lg:min-h-0 lg:min-h-[500px] lg:h-[660px] px-4 py-4 max-sm:px-3 max-sm:py-3.5 max-lg:rounded-2xl lg:rounded-[32px] max-lg:bg-[#001133]/55 lg:bg-[#001133]/60 max-lg:backdrop-blur-xl lg:backdrop-blur-2xl max-lg:border max-lg:border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.4)] lg:shadow-[0_15px_50px_rgba(0,0,0,0.5)] lg:px-12 lg:py-10 animate-form-flicker max-lg:overflow-hidden"
+        className="w-full max-w-[460px] lg:max-w-[520px] xl:max-w-[580px] mx-auto flex flex-col items-center justify-center relative max-lg:min-h-0 lg:min-h-[500px] lg:max-h-[88vh] px-4 py-4 max-sm:px-3 max-sm:py-3.5 max-lg:rounded-2xl lg:rounded-[32px] max-lg:bg-[#001133]/55 lg:bg-[#001133]/60 max-lg:backdrop-blur-xl lg:backdrop-blur-2xl max-lg:border max-lg:border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.4)] lg:shadow-[0_15px_50px_rgba(0,0,0,0.5)] lg:px-10 lg:py-5 animate-form-flicker overflow-hidden"
       >
         {/* Gradient Border Mask (Desktop Only) */}
         <div 
@@ -166,9 +161,9 @@ export const FormContainer = ({
             >
               {(step === 1 || step === 2) ? (
                 <div className="flex flex-col gap-2.5 max-lg:gap-2 w-full animate-fade-in">
-                  <h2 className="text-2xl font-bold text-center text-white/95 uppercase tracking-wider mb-0.5 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] max-lg:text-[18px]">Register here</h2>
+                  <h2 className="text-xl lg:text-2xl font-bold text-center text-white/95 uppercase tracking-wider mb-1 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">Register here</h2>
 
-                  <div className="w-full flex flex-col gap-2.5 max-lg:gap-1.5 pt-0.5">
+                  <div className="w-full flex flex-col gap-2 max-lg:gap-1.5 pt-0.5">
                     <FormField 
                       name="name" 
                       value={formData.name} 

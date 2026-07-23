@@ -58,7 +58,7 @@ const FormField = ({
   );
 
   return (
-    <div className={`w-full relative group transition-all duration-300 ${isOpen ? 'z-[100]' : 'z-30'}`}>
+    <div className={`w-full relative group transition-all duration-300 ${isOpen ? 'z-[100]' : 'z-30'} pb-4`}>
       <style>{`
         @media (min-width: 1024px) {
           @keyframes input-shadow-flicker {
@@ -168,9 +168,9 @@ const FormField = ({
         </div>
       )}
 
-      {/* Field Level Error Message */}
+      {/* Field Level Error Message - absolute so it doesn't shift layout */}
       {error && (
-        <div className="text-[10px] text-[#ff0055] font-semibold mt-1 ml-2 animate-fade-in pointer-events-none">
+        <div className="absolute bottom-0.5 left-2 text-[9.5px] text-[#ff4477] font-bold animate-fade-in pointer-events-none leading-none tracking-wide">
           {error}
         </div>
       )}
