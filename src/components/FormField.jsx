@@ -58,7 +58,7 @@ const FormField = ({
   );
 
   return (
-    <div className={`w-full relative group transition-all duration-300 ${isOpen ? 'z-[100]' : 'z-30'} pb-4`}>
+    <div className={`w-full relative group transition-all duration-300 ${isOpen ? 'z-[100]' : 'z-30'} lg:pb-4`}>
       <style>{`
         @media (min-width: 1024px) {
           @keyframes input-shadow-flicker {
